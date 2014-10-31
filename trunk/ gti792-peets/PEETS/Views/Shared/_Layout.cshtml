@@ -1,0 +1,126 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>@ViewBag.Title - PÉETS(Plateforme d'échange d'article scolaire)</title>
+
+        <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+        <link href="~/Content/united-bootstrap.min.css" rel="stylesheet" />
+        <link href="~/Content/Site.css" rel="stylesheet" />
+    
+        <style type="text/css">
+            #logo a {
+                color: white!important;
+            }
+        </style>
+
+
+    </head>
+<body>
+    <div id="page">
+        
+        <header class="container">
+            <div id="menu" class="navbar navbar-default navbar-fixed-top">
+                <div class="navbar-header" style="padding-left: 20px;">
+                    <button class="btn btn-success navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="glyphicon glyphicon-chevron-down"></span>
+                    </button>
+                    <div id="logo">
+                        <h3>@Html.ActionLink("PÉETS", "Index", "Home", null, null)</h3>
+                    </div>
+                </div>      
+                
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav navbar-right" style="padding-right: 20px">
+                        <li class="nav active">@Html.ActionLink("Accueil", "Index", "Home")</li>
+                        <li class="nav">@Html.Partial("_LoginPartial")</li>
+                        <li class="nav">@Html.Partial("_LinkOffre")</li>
+                        @*<li class="nav">@Html.ActionLink("Contact", "Contact", "Home")</li> 
+                        <li class="nav">@Html.ActionLink("À propos de", "About", "Home")</li>*@
+                        <li class="nav">@Html.Partial("_LoginPartial2")</li>
+                    </ul>
+                </div>
+
+            </div>
+            
+        </header>
+        
+        <section id="body" class="container">
+            
+            <div class="row visible-md visible-lg">
+                <div class="col-md-12 col-lg-12">
+                    @Html.Partial("_carousel")
+                </div>  
+            </div>
+            
+            <hr/>
+
+            <section id="main" class="col-md-9 col-sm-10" style="border-right-style: outset;height: 730px;margin-top: 15px">
+                @RenderBody()
+            </section>
+
+    @*@using (Html.BeginForm("Rechercher", "Home", new { }, FormMethod.Post))
+    {*@
+        <section id="sidebar" class="col-md-3 col-sm-2" style="background-color: #aa4200;height: 745px">
+            <div style="margin-top: 15px;text-align: center">
+                <div style="border-style: solid;border-color: #bf3e11;padding-bottom: 30px">
+                    <h4 style="color: yellow">Recherche</h4>
+                    <div>
+                        <input id="nom" style="height: 30px" type="text" placeholder="Nom du livre">
+                    </div>
+                    <div>
+                        <input id="isbn" style="height: 30px" type="text" placeholder="Code ISBN">
+                    </div>
+                    <div>
+                        <input id="auteur" style="height: 30px" type="text" placeholder="Auteur">
+                    </div>
+                    <div>
+                        <input id="sigle" style="height: 30px" type="text" placeholder="Sigle du cours">
+                    </div>
+                    @*<div>
+                            <input style="height: 30px" type="text" placeholder="Description du livre">
+                        </div>*@
+                    <div style="padding-top: 7px">
+                        <button style="width: 150px;" onclick="Rechercher()"  class="btn btn-sm btn-warning">Rechercher</button>
+                    </div>
+                </div>
+            </div>
+
+            <div style="border-style: solid;border-color: #bf3e11;padding-bottom: 30px;margin-top: 15px;height: 430px;padding-left: 10px;padding-right: 10px">
+                <h4 style="color: yellow;text-decoration:underline;text-align: center">Conseils sur l'envirronement</h4>           
+                <p>
+                    <h5 style="font-weight: bold;text-align: center">Recyclage du papier: réduire, <span class="text-muted">réutiliser</span>, recycler: les trois R d'une meilleure gestion</h5>
+                </p>
+                <p style="text-align: justify;color: yellow">
+                    Pour arriver à un équilibre écologique dans l'univers du papier, il est important d'en réduire la consommation, de le réutiliser au maximum et de le recycler systématiquement. Le recyclage du papier est un acte simple, mais puissant, qui favorise le changement chez les personnes et dans les entreprises. À titre de citoyens, nous pouvons tous contribuer à changer les choses de multiples façons.
+                </p>
+                    
+                <p style="text-align: center">
+                    <a style="color: black" target="_blank" href="http://www.fr.tork.ca/Environnement/Recyclage-du-papier-/">www.fr.tork.ca</a> 
+                </p>
+            </div>
+
+        </section>
+    @*}*@
+        </section>       
+        
+        <hr />
+        <footer class="container" style="text-align: center;color: orange;padding-right: 300px">
+            <p>&copy; @DateTime.Now.Year - PÉETS organisation</p>
+        </footer>
+
+    </div>
+    
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/modernizr")   
+    <script src="~/Scripts/jquery-migrate-1.2.1.min.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax-3.0.min.js"></script>
+    <script src="~/Scripts/MicrosoftAjax.js"></script>
+    <script src="~/Scripts/MicrosoftMvcAjax.js"></script>
+    <script src="~/Scripts/Site.js"></script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

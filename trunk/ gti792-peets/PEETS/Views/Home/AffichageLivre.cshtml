@@ -1,0 +1,24 @@
+﻿<div id="affichageLivre">
+    @{
+        foreach (var offre in Model)
+        {
+            <div class="col-md-3 ajaxLink" style="text-align: center;padding-top: 20px;" title="@offre.NomLivre">
+                <p>
+                    <img src="@offre.ImageLivre" style="width: 120px!important; height: 140px!important" alt="x" class="img-thumbnail" />
+                </p>
+                <h5 style=" color: red;height: 42px;font-weight: bold">@offre.NomLivre</h5>
+                <h6><span style="font-weight: bold">Code ISBN 13: </span>@offre.CodeIsbn_13</h6>
+                <div><span style="font-weight: bold">État: </span>@offre.EtatLivre</div>
+                @using (Ajax.BeginForm("GetDetailsJson", new { noOffre = @offre.NoOffre },
+                    new AjaxOptions
+                    {
+                        OnSuccess = "DetailsOnSuccess",
+                        OnFailure = "DetailsOnFailure"
+                    }))
+                {
+                    <p style="padding-top: 5px"><input class="btn btn-danger" value="Détails" type="submit" id="btnOffre_@offre.NoOffre" data-toggle="modal" /></p>
+                }
+            </div>
+        }
+    }
+</div>

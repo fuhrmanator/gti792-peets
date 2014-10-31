@@ -1,0 +1,8 @@
+﻿@using Microsoft.AspNet.Identity
+@using Microsoft.Owin.Security
+
+@if (Request.IsAuthenticated)
+{  
+    @Html.ActionLink("Gérer vos offres", "Index", "Offer")
+       
+}
