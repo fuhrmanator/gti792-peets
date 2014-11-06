@@ -19,17 +19,26 @@ namespace PEETS.Controllers
             return View(ObtenirListeLivres());
         }
 
-        public ActionResult ObtenirListeLivresParPage(string page, int pageActuel, int pageTotal)
+        public ActionResult ObtenirListeLivresParPage(string page, int pageActuel, string titre, string isbn, string auteur, string sigle)
         {
-            pageTotal = Offre.GetTotalRows()/8;
+            var pageTotal = Offre.GetTotalRows()/8;
             var count = pageTotal / 8.0;
             var pageCount = (int)Math.Ceiling((decimal)count);
             var newPageActuel = GererPage(page, pageActuel, pageCount);
             int start = ((newPageActuel - 1) * 8) + 1;
             int last = start + 7;
             ViewBag.PageActuel = newPageActuel;
-
+            GererChampsRecherche();
             return View("Index", ObtenirListeLivres(start, last));
+        }
+
+        private void GererChampsRecherche()
+        {
+            ViewBag.NomLivre = Request.Form["nom"];
+            ViewBag.ISBN = Request.Form["isbn"];
+            ViewBag.Auteur = Request.Form["auteur"];
+            ViewBag.Sigle = Request.Form["sigle"];
+
         }
 
         private int GererPage(string page, int pageActuel, int pageTotal)
@@ -42,31 +51,32 @@ namespace PEETS.Controllers
             {
                 pageNumber = n;
             }
-            else if (page == "+>1")
+            else switch (page)
             {
-                if (pageActuel < pageTotal)
-                {
-                    pageNumber = pageActuel + 1;
-                }
-                else if (pageActuel > pageTotal)
-                {
-                    pageNumber = 1;
-                }
-                else
-                    pageNumber = pageActuel;
-            }
-            else if (page == "<-1")
-            {
-                if (pageActuel > 1)
-                {
-                    pageNumber = pageActuel - 1;
-                }
-                else if (pageActuel < 1)
-                {
-                    pageNumber = 1;
-                }
-                else
-                    pageNumber = pageActuel;
+                case "+>1":
+                    if (pageActuel < pageTotal)
+                    {
+                        pageNumber = pageActuel + 1;
+                    }
+                    else if (pageActuel > pageTotal)
+                    {
+                        pageNumber = 1;
+                    }
+                    else
+                        pageNumber = pageActuel;
+                    break;
+                case "<-1":
+                    if (pageActuel > 1)
+                    {
+                        pageNumber = pageActuel - 1;
+                    }
+                    else if (pageActuel < 1)
+                    {
+                        pageNumber = 1;
+                    }
+                    else
+                        pageNumber = pageActuel;
+                    break;
             }
 
             return pageNumber;
@@ -158,6 +168,7 @@ namespace PEETS.Controllers
                recherche += " And l.Auteur like '%" + auteur + "%'";
            }
 
+            GererChampsRecherche();
             ViewBag.PageActuel = 1;
 
             return View("AffichageLivre", ObtenirListeLivres(start, last, recherche));

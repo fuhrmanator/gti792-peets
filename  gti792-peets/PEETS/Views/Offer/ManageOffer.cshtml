@@ -52,8 +52,7 @@
                             <tr>
                                 <th>No offre</th>
                                 <th>Livre</th>
-                                <th>Échangé</th>
-                                <th> </th>
+                                <th>Fermer l'offre</th>
                             </tr>
                         </thead>
                         @foreach (var offre in @Model.ListeOffresUtil)
@@ -61,14 +60,7 @@
                             <tr>
                                 <td style="text-align: center">@offre.NoOffre</td>
                                 <td>@offre.NomLivre</td>
-                                <td style="text-align: center">
-                                    @using (Html.BeginForm("ChangerStatut", "Offer", new { offre = @offre }, FormMethod.Post))
-                                    {
-                                        @Html.CheckBoxFor(m => m.ListeOffresUtil.First().Statut, @offre.Statut)
-                                    }
-                                    @*@Html.CheckBox("", @offre.Statut, new { onclick = "this.form.submit();" })*@
-                                </td>
-                                <td style="text-align: center"><a href='@(Url.Action("DesactiverOffre", "Offer", new { nOoffre = @offre.NoOffre }))'><b href='#' title="Supprimer l'offre" class='close'>&times;</b></a></td>
+                                <td style="text-align: center"><a onclick="AfficherModalFermeture('@offre.NoOffre', '@offre.NomLivre')" class="btn btn-danger btn-xs">Fermer</a></td>
                             </tr>
                         }
                     </table>
@@ -112,9 +104,6 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        @{
-
-                        }
                         <span class="form-group">
                             <input type="submit" class="btn btn-success btn-sm" value="Ajouter" />
                         </span>
@@ -125,7 +114,42 @@
         </div>
     }
 
-    @section Scripts {
+@using (Html.BeginForm("DesactiverOffre", "Offer", FormMethod.Post))
+{
+    <div class="modal fade" id="fermerOfferDialog" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #aa4200">
+                    <a href="#" class="close" data-dismiss="modal">&times;</a>
+                    <h4 style="color: white!important">Fermeture de l'offre </h4>
+                </div>
+                <div class="modal-body">
+
+                    <div>
+                        <label style="width: 180px">Nom du livre: </label> <span id="lbNomFerme"></span>
+                    </div>
+
+                    <div>
+                        <label style="width: 180px">Raison de la fermeture: </label> @Html.DropDownListFor(m => m.SelectedRaison, Model.ListeRaisons(), new { style = "width: 200px" })
+                    </div>
+
+                    <div>
+                        <label style="width: 180px">Détails: </label> @Html.TextAreaFor(m => m.DétailsFermeture, new { style = "width: 200px" })
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <span class="form-group">
+                        <input type="submit" class="btn btn-warning btn-sm" value="Confirmer" />
+                    </span>
+                    @Html.HiddenFor(m => m.NoOffre)
+                    <button class="btn btn-danger btn-sm" data-dismiss="modal"> Annuler</button>
+                </div>
+            </div> 
+        </div>
+    </div>
+}
+
+@section Scripts {
         @Scripts.Render("~/bundles/jqueryval")
         <script src="~/Scripts/bootstrap-filestyle-0.1.0.min.js"> </script>
     }

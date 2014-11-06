@@ -17,10 +17,11 @@ namespace PEETS.Models
 
         [StringLength(200, ErrorMessage = "La remarque doit être moins de 50 caractères")]
         public string Remarques { get; set; }
-
+        public string DétailsFermeture { get; set; }
         public string CoursObligatoires { get; set; }
         public string CoursReferences { get; set; }
-        public String SelectedEtat { get; set; }
+        public string SelectedEtat { get; set; }
+        public string SelectedRaison { get; set; }
 
         public IEnumerable<SelectListItem> Etats = new List<SelectListItem>
         {
@@ -31,6 +32,56 @@ namespace PEETS.Models
             new SelectListItem {Value = "MOYEN", Text = "Moyen"},
             new SelectListItem {Value = "MAUVA", Text = "Mauvais état"}
         };
+
+
+        public IEnumerable<SelectListItem> ListeRaisons()
+        {
+            return ObtenirListeRaison().Select(raison => new SelectListItem
+            {
+                Value = raison.CodeRaison,
+                Text = raison.DescRaison,
+                Selected = raison.CodeRaison == "ECHAN"
+            }).ToList();
+        }
+
+
+        public List<Raison> ObtenirListeRaison()
+        {
+            SqlConnection cnn = null;
+            var connetionString = Properties.Settings.Default.dbConnectionString;
+            var raisons = new List<Raison>();          
+            cnn = new SqlConnection(connetionString);
+
+            const string sql = "SELECT * FROM Raison r ";
+            try
+            {
+                cnn.Open();
+                var command = new SqlCommand(sql, cnn);
+                
+                var dataReader = command.ExecuteReader();
+
+                while (dataReader.Read())
+                {
+                    var raison = new Raison
+                    {
+                        CodeRaison = dataReader.GetValue(0).ToString(),
+                        DescRaison = dataReader.GetValue(1).ToString()
+                    };
+
+                    raisons.Add(raison);
+                }
+
+                dataReader.Close();
+                command.Dispose();
+                cnn.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Can not open connection ! ");
+            }
+
+            return raisons;
+        }
 
         public LivreModel Livre { get; set; }
 

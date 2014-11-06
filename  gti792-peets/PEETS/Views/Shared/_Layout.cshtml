@@ -68,16 +68,16 @@
                 <div style="border-style: solid;border-color: #bf3e11;padding-bottom: 30px">
                     <h4 style="color: yellow">Recherche</h4>
                     <div>
-                        <input id="nom" style="height: 30px" type="text" placeholder="Nom du livre">
+                        <input id="nom" name="nom" style="height: 30px" type="text" placeholder="Nom du livre" value="@ViewBag.NomLivre">
                     </div>
                     <div>
-                        <input id="isbn" style="height: 30px" type="text" placeholder="Code ISBN">
+                        <input id="isbn" name="isbn" style="height: 30px" type="text" placeholder="Code ISBN" value="@ViewBag.ISBN">
                     </div>
                     <div>
-                        <input id="auteur" style="height: 30px" type="text" placeholder="Auteur">
+                        <input id="auteur" name="auteur" style="height: 30px" type="text" placeholder="Auteur" value="@ViewBag.Auteur">
                     </div>
                     <div>
-                        <input id="sigle" style="height: 30px" type="text" placeholder="Sigle du cours">
+                        <input id="sigle" name="sigle" style="height: 30px" type="text" placeholder="Sigle du cours" value="@ViewBag.Sigle">
                     </div>
                     @*<div>
                             <input style="height: 30px" type="text" placeholder="Description du livre">

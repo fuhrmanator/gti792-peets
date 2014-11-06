@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin.Security;
+using PEETS.Enums;
 using PEETS.Models;
 
 namespace PEETS.Controllers
@@ -111,7 +113,7 @@ namespace PEETS.Controllers
             {
                 message = ManageMessageId.Error;
             }
-            return RedirectToAction("Manage", new { Message = message });
+            return RedirectToAction("LogOff", "Account");
         }
 
         //
@@ -127,9 +129,49 @@ namespace PEETS.Controllers
             ViewBag.HasLocalPassword = HasPassword();
             ViewBag.ReturnUrl = Url.Action("Manage");
 
-            return View("Manage");
+
+
+            return View("Manage", GetUserProfil());
         }
 
+        private User GetUserProfil()
+        {
+            SqlConnection cnn = null;
+            string connetionString = Properties.Settings.Default.dbConnectionString;
+            User user = null;
+            string sql = "SELECT u.UserName, u.Email, u.PhoneNumber " +
+                         "FROM AspNetUsers u " +
+                         "Where u.Id = '" + User.Identity.GetUserId() + "'";
+
+            cnn = new SqlConnection(connetionString);
+
+            try
+            {
+                cnn.Open();
+                var command = new SqlCommand(sql, cnn);
+                var dataReader = command.ExecuteReader();
+
+                while (dataReader.Read())
+                {
+                    user = new User
+                    {
+                        NomUtil = dataReader.GetValue(0).ToString(),
+                        Email = dataReader.GetValue(1).ToString(),
+                        PhoneNumber = dataReader.GetValue(2).ToString()
+                    };
+
+                }
+
+                dataReader.Close();
+                command.Dispose();
+                cnn.Close();
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return user;
+        }
         //
         // POST: /Account/Manage
         [HttpPost]
@@ -263,7 +305,7 @@ namespace PEETS.Controllers
                 {
                     return View("ExternalLoginFailure");
                 }
-                var user = new ApplicationUser() { UserName = model.UserName, Email = model.Email, PhoneNumber = model.PhoneNumber};
+                var user = new ApplicationUser() { UserName = model.UserName, Email = model.Email, PhoneNumber = model.PhoneNumber, };
                 var result = await UserManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
@@ -297,12 +339,39 @@ namespace PEETS.Controllers
             return View();
         }
 
-        [ChildActionOnly]
         public ActionResult RemoveAccountList()
         {
             var linkedAccounts = UserManager.GetLogins(User.Identity.GetUserId());
-            ViewBag.ShowRemoveButton = HasPassword() || linkedAccounts.Count > 1;
+            ViewBag.ShowRemoveButton = linkedAccounts.Count >= 1;
             return (ActionResult)PartialView("_RemoveAccountPartial", linkedAccounts);
+        }
+
+        public ActionResult ModifyAccount(User user)
+        {
+            if (user != null)
+            {
+                var connetionString = Properties.Settings.Default.dbConnectionString;
+                var sql = "Update AspNetUsers Set Email = '" + user.Email + 
+                          "', PhoneNumber = '" + user.PhoneNumber +
+                          "' Where Id = '" + User.Identity.GetUserId() + "'";
+                var cnn = new SqlConnection(connetionString);
+
+                try
+                {
+                    cnn.Open();
+                    var command = new SqlCommand(sql, cnn);
+                    command.ExecuteNonQuery();
+                    command.Dispose();
+                    cnn.Close();
+                }
+                catch (Exception ex)
+                {
+ 
+                }
+
+             }
+
+            return View("Manage", user);
         }
 
         protected override void Dispose(bool disposing)

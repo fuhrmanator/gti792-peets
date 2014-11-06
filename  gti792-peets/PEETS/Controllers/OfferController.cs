@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using System.Web.Services;
+using System.Web.UI.HtmlControls;
 using System.Windows.Forms;
 using Facebook;
 using Microsoft.Owin.Security.Facebook;
@@ -33,7 +34,7 @@ namespace PEETS.Controllers
             List<Offre> offres = null;
             SqlConnection cnn = null;
             var connetionString = Properties.Settings.Default.dbConnectionString;
-            var sql = "SELECT o.Id, l.Nom, o.IndStatut " +
+            var sql = "SELECT o.Id, l.Nom " +
                          "FROM Offre o " +
                          "JOIN Livre l On o.IdLivre = l.Id " +
                          "Where o.userId = '" + User.Identity.GetUserId() + "' And o.IndActif='1'";
@@ -54,7 +55,6 @@ namespace PEETS.Controllers
                     {
                         NoOffre = (int)dataReader.GetValue(0),
                         NomLivre = dataReader.GetValue(1).ToString(),
-                        Statut = dataReader.GetValue(2).ToString() == "0"
                     };
 
                     offres.Add(offre);
@@ -338,19 +338,23 @@ namespace PEETS.Controllers
             }
         }
 
-        public ActionResult DesactiverOffre(int noOffre)
+        public ActionResult DesactiverOffre(OfferModel offerModel)
         {
+            var noOffre = Convert.ToInt32(Request.Form["NoOffre"]);
+
+            offerModel.NoOffre = noOffre;
+
             var message="";
             TypeMessage type;
 
-            if (UpdateOffre(noOffre))
+            if (UpdateOffre(offerModel))
             {
-                message = "L'offre a été supprimé.";
+                message = "L'offre a été fermé.";
                 type = TypeMessage.Succes;
             }
             else
             {
-                message = "L'offre n'a pu être supprimé.";
+                message = "L'offre n'a pu être fermé.";
                 type = TypeMessage.Erreur;
             }
 
@@ -364,38 +368,12 @@ namespace PEETS.Controllers
             return View("ManageOffer", offre);
         }
 
-        public ActionResult ChangerStatut(Offre offre)
-        {
-            var message = "";
-            TypeMessage type;
-
-            if (UpdateOffre(offre.NoOffre, 1, offre.Statut?1:0))
-            {
-                message = "Le statut de l'offre a été modifié.";
-                type = TypeMessage.Succes;
-            }
-            else
-            {
-                message = "Le statut de l'offre n'a pu être modifié.";
-                type = TypeMessage.Erreur;
-            }
-
-            var offerModel = new OfferModel
-            {
-                Livre = new LivreModel { },
-                ListeOffresUtil = ObtenirListeOffresUtil(),
-                Message = message,
-                TypeMessage = type
-            };
-           
-            return View("ManageOffer", offerModel);
-        }
-        public bool UpdateOffre(int noOffre, int indActif=0, int statut=0)
+        public bool UpdateOffre(OfferModel offre, int indActif = 0)
         {
             var update = false;
 
             var connetionString = Properties.Settings.Default.dbConnectionString;
-            var sql = "Update Offre Set IndActif = '" + indActif + "', IndStatut = '" + statut + "' Where Id = " + noOffre;
+            var sql = "Update Offre Set IndActif = '" + indActif + "', Raison = '" + offre.SelectedRaison + "', DetailsRaison = '" + offre.DétailsFermeture + "' Where Id = " + offre.NoOffre;
             var cnn = new SqlConnection(connetionString);
 
             try

@@ -47,3 +47,32 @@ function Rechercher() {
        }
    });
 }
+
+function GererPagination(command) {
+
+    var nom = $("#nom").val();
+    var isbn = $("#isbn").val();
+    var auteur = $("#auteur").val();
+    var sigle = $("#sigle").val();
+    var pageActuel = $("#pageActuel").val();
+    //@Html.ActionLink("Suivant >>", "ObtenirListeLivresParPage", new { page = "+>1", pageActuel = pageActuel, pageTotal = pageCount })
+    //@Html.ActionLink("<< Précédent", "ObtenirListeLivresParPage", new { page = "<-1", pageActuel = pageActuel, pageTotal = pageCount })
+
+    var recherche = { titre: nom, isbn: isbn, auteur: auteur, sigle: sigle, pageActuel: pageActuel };
+    $.ajax({
+        type: "POST",
+        url: "/Home/ObtenirListeLivresParPage",
+        data: recherche,
+        datatype: "html",
+        success: function (data) {
+            var result = $(data).find("#affichageLivre");
+            $("#affichageLivre").html(result);
+        }
+    });
+}
+
+function AfficherModalFermeture(id, nom) {
+    $("#lbNomFerme").text(nom);
+    $("#NoOffre").val(id);
+   $("#fermerOfferDialog").modal();
+}

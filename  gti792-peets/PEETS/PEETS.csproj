@@ -204,17 +204,22 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201410010234342_InitialCreate.cs" />
+    <Compile Include="Migrations\201410010234342_InitialCreate.Designer.cs">
+      <DependentUpon>201410010234342_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\Etat.cs" />
+    <Compile Include="Models\Profil.cs" />
+    <Compile Include="Models\Raison.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\Livre.cs" />
-    <Compile Include="Models\LivreAndOfferModel.cs" />
     <Compile Include="Models\LivreModel.cs" />
     <Compile Include="Models\OfferModel.cs" />
     <Compile Include="Models\Offre.cs" />
-    <Compile Include="Models\Recherche.cs" />
     <Compile Include="Models\Reponse.cs" />
     <Compile Include="Models\Statut.cs" />
+    <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -376,6 +381,9 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Migrations\201410010234342_InitialCreate.resx">
+      <DependentUpon>201410010234342_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
