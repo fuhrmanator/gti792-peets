@@ -1,145 +1,72 @@
 ﻿@using PEETS.Models;
 @using Microsoft.AspNet.Identity;
-@model PEETS.Models.OfferModel
+@model PEETS.Models.User
 
 @{
     ViewBag.Title = "Gérer votre compte";
 }
 
-<h3>Gérer les offres.</h3>
+<h3 style="text-decoration: underline">Modifier votre profil</h3>
 
-<div class="row" style="height: 250px;">
+<div style="height: 150px;" class="col-md-12 row">
 
-    <div>Vous n'avez aucune offre présentement.</div> 
-    
-    <div style="padding-top: 7px" class="col-md-6">
-        <a href="#addOfferDialog" class="btn btn-warning btn-lg glyphicon-plus" data-toggle="modal"> Ajouter une offre</a>
-    </div> 
-    
-    <div style="padding-top: 7px" class="col-md-6">
-        <a href="#addLivreDialog" class="btn btn-success btn-lg glyphicon-plus" data-toggle="modal"> Ajouter un livre</a>
-    </div> 
-
-</div>
-
-<h3>Gérer votre compte.</h3>
-
-<div class="row" style="height: 250px;margin-top: 20px">
-    
-    <div style="padding-top: 7px" class="col-md-6">
-        <a href="#desactiverCompteDialog" class="btn btn-danger" data-toggle="modal">Supprimer votre compte</a>
-    </div> 
-
-</div>
-
-@using (Html.BeginForm("Create", "Offer", FormMethod.Post))
-{
-    <div class="modal fade" id="addOfferDialog" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header" style="background-color: #aa4200">
-                    <a href="#" class="close" data-dismiss="modal">&times;</a>
-                    <h4 style="color: white!important">Ajout d'une offre</h4>
-                </div>
-                <div class="modal-body">
-                    <div>
-                        <label style="width: 150px">Date de début</label>
-                        @Html.TextBoxFor(m => m.Offer.DateDebut, "{0:dd/MM/yyyy}", new { style = "width: 200px" }) <span style="font-weight: bolder;color: red"> *</span> 
-                        @Html.ValidationMessageFor(m => m.Offer.DateDebut)
-                    </div>
-                    <div>
-                        <label style="width: 150px">Date de fin</label>
-                        @Html.TextBoxFor(m => m.Offer.DateFin, "{0:dd/MM/yyyy}", new { style = "width: 200px" })
-                        @Html.ValidationMessageFor(m => m.Offer.DateFin)
-                    </div>  
-                    
-                    @{
-                        if (Model.Offer != null)
-                        {
-                            <div>
-                                <label style="width: 150px">Livre</label>
-                                @Html.DropDownListFor(m => m.Offer.LivresSelectedId, Model.Offer.Livres(), new { style = "width: 200px" })
-                            </div>
-                            <div>
-                                <label style="width: 150px;vertical-align: text-top">Satut</label>
-                                @Html.DropDownListFor(m => m.Offer.StatutsSelectedId, Model.Offer.Statuts(), new { style = "width: 200px" })
-                            </div>
-                        }
-                    }
-                    
-                    <div>
-                        <label style="width: 150px">Prix demandé</label> @Html.TextBoxFor(m => m.Offer.Prix, "{0:0.00}", new { style = "width: 200px" }) <span style="font-weight: bolder;color: red"> *</span>
-                        @Html.ValidationMessageFor(m => m.Offer.Prix)
-                    </div>
-
-                    <div>
-                        <label style="width: 150px">Remarque</label>
-                        @Html.TextAreaFor(m => m.Offer.Remarques, htmlAttributes: new { style = "width: 300px;height: 200px" })
-                        @Html.ValidationMessageFor(m => m.Offer.Remarques)
-                    </div>                 
-                </div>
-                <div class="modal-footer">
-                    @{
-
-                    }
-                    <span class="form-group">
-                        <input type="submit" class="btn btn-success btn-sm" value="Ajouter" />
-                    </span>
-                    <button class="btn btn-danger btn-sm" data-dismiss="modal"> Annuler</button>
-                </div>
-            </div>
-        </div>
+    <div>
+        <label>Nom utilisateur: </label> <span>@Html.DisplayFor(m => m.NomUtil)</span>
     </div>
-}
-     
-@using (Html.BeginForm("Create", "Livre", FormMethod.Post, new { EncType = "multipart/form-data" }))
+    <div>
+        <label>Courriel: </label> <span>@Html.DisplayFor(m => m.Email)</span>
+    </div>
+    <div>
+        <label>Téléphone: </label> <span>@Html.DisplayFor(m => m.PhoneNumber)</span>
+    </div>
+    <div style="padding-top: 7px" class="col-md-6">
+        <a href="#modifCompteDialog" class="btn btn-warning" data-toggle="modal">Modifier</a>
+    </div>
+
+</div>
+
+<h3 style="text-decoration: underline">Supprimer votre compte</h3>
+
+<div class="row col-md-12" style="height: 150px;margin-top: 5px">
+
+    <div style="padding-top: 5px" class="col-md-6">
+        <a href="#desactiverCompteDialog" class="btn btn-danger" data-toggle="modal">Supprimer</a>
+    </div>
+
+</div>
+    
+@using (Html.BeginForm("ModifyAccount", "Account", FormMethod.Post))
 {
-    <div class="modal fade" id="addLivreDialog" tabindex="-1">
+    <div class="modal fade" id="modifCompteDialog" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header" style="background-color: #59822c">
                     <a href="#" class="close" data-dismiss="modal">&times;</a>
-                    <h4 style="color: white!important">Ajout d'un livre</h4>
+                    <h4 style="color: white!important">Modification du compte</h4>
                 </div>
                 <div class="modal-body">
                     <div>
-                        <label style="width: 150px">Code ISBN</label> @Html.TextBoxFor(m => m.Livre.CodeIsbn, null, new { style = "width: 200px" })
-                        @Html.ValidationMessageFor(m => m.Livre.CodeIsbn)
+                        <label style="width: 150px">Courriel</label> @Html.TextBoxFor(m => m.Email, null, new { style = "width: 200px" }) <span style="font-weight: bolder;color: red"> *</span>
+                        @Html.ValidationMessageFor(m => m.Email)
                     </div>
                     <div>
-                        <label style="width: 150px">Nom</label> @Html.TextBoxFor(m => m.Livre.Nom, null, new { style = "width: 200px" }) <span style="font-weight: bolder;color: red"> *</span> 
-                        @Html.ValidationMessageFor(m => m.Livre.Nom)
+                        <label style="width: 150px">Téléphone</label> @Html.TextBoxFor(m => m.PhoneNumber, null, new { style = "width: 200px" })
+                        @Html.ValidationMessageFor(m => m.PhoneNumber)
                     </div>
-                    
-                    @{
-                        if (Model.Livre != null)
-                        {
-                            <div>
-                                <label style="width: 150px">État</label> @Html.DropDownListFor(m => m.Livre.SelectedId, Model.Livre.Etats, new { style = "width: 200px" })
-                            </div>
-                        }
-                    }
-                    
-                    <div>
-                        <label style="width: 150px">Image</label> @Html.TextBoxFor(m => m.Livre.Image, null, htmlAttributes: new { type = "file", style = "display: inline!important;width: 300px;"})
-                    </div>
-                    
                 </div>
                 <div class="modal-footer">
-                    @{
-
-                    }
                     <span class="form-group">
-                        <input type="submit" class="btn btn-success btn-sm" value="Ajouter le livre" />
+                        <input type="submit" class="btn btn-success btn-sm" value="Modifier" />
                     </span>
                     <button class="btn btn-danger btn-sm" data-dismiss="modal"> Annuler</button>
                 </div>
             </div>
+            @Html.HiddenFor(m => m.NomUtil)
         </div>
     </div>
 }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
 
-@using (Html.BeginForm("Disassociate", "Account", FormMethod.Post))
+@using (Html.BeginForm("RemoveAccountList", "Account", FormMethod.Post))
 {
     <div class="modal fade" id="desactiverCompteDialog" tabindex="-1">
         <div class="modal-dialog">
@@ -149,7 +76,7 @@
                     <h4 style="color: white!important">Supprimer le compte</h4>
                 </div>
                 <div class="modal-body">
-                    Votre compte sera supprimé et vous ne pourrais plus ....                
+                    Votre compte sera supprimé définitivement. Cliquez sur le bouton [Supprimer] pour continuer.           
                 </div>
                 <div class="modal-footer">
                     @{
