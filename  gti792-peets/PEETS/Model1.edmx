@@ -1,0 +1,893 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="ModelEF.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="__MigrationHistory">
+          <Key>
+            <PropertyRef Name="MigrationId" />
+            <PropertyRef Name="ContextKey" />
+          </Key>
+          <Property Name="MigrationId" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="ContextKey" Type="nvarchar" MaxLength="300" Nullable="false" />
+          <Property Name="Model" Type="varbinary(max)" Nullable="false" />
+          <Property Name="ProductVersion" Type="nvarchar" MaxLength="32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AspNetRoles">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AspNetUserClaims">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ClaimType" Type="nvarchar(max)" />
+          <Property Name="ClaimValue" Type="nvarchar(max)" />
+          <Property Name="UserId" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AspNetUserLogins">
+          <Key>
+            <PropertyRef Name="LoginProvider" />
+            <PropertyRef Name="ProviderKey" />
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="LoginProvider" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="ProviderKey" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AspNetUserRoles">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="RoleId" Type="nvarchar" MaxLength="128" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AspNetUsers">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="256" />
+          <Property Name="EmailConfirmed" Type="bit" Nullable="false" />
+          <Property Name="PasswordHash" Type="nvarchar(max)" />
+          <Property Name="SecurityStamp" Type="nvarchar(max)" />
+          <Property Name="PhoneNumber" Type="nvarchar(max)" />
+          <Property Name="PhoneNumberConfirmed" Type="bit" Nullable="false" />
+          <Property Name="TwoFactorEnabled" Type="bit" Nullable="false" />
+          <Property Name="LockoutEndDateUtc" Type="datetime" />
+          <Property Name="LockoutEnabled" Type="bit" Nullable="false" />
+          <Property Name="AccessFailedCount" Type="int" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="UserProfil" Type="nchar" MaxLength="5" />
+        </EntityType>
+        <EntityType Name="Cours">
+          <Key>
+            <PropertyRef Name="Sigle" />
+          </Key>
+          <Property Name="Sigle" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="NomCours" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Etat">
+          <Key>
+            <PropertyRef Name="CodeEtat" />
+          </Key>
+          <Property Name="CodeEtat" Type="nchar" MaxLength="5" Nullable="false" />
+          <Property Name="DesctEtat" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Livre">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CodeISBN_10" Type="nvarchar" MaxLength="50" />
+          <Property Name="Nom" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="Image" Type="nvarchar(max)" />
+          <Property Name="Auteur" Type="nvarchar" MaxLength="200" />
+          <Property Name="DescriptLivre" Type="nvarchar(max)" />
+          <Property Name="SousTitre" Type="nvarchar" MaxLength="100" />
+          <Property Name="Image2" Type="nvarchar(max)" />
+          <Property Name="CodeISBN_13" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Livre_Cours_TypeReferences">
+          <Key>
+            <PropertyRef Name="IdLivre" />
+          </Key>
+          <Property Name="IdLivre" Type="int" Nullable="false" />
+          <Property Name="SigleCours" Type="nchar" MaxLength="10" />
+          <Property Name="TypeReferences" Type="nchar" MaxLength="5" />
+        </EntityType>
+        <EntityType Name="Offre">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdLivre" Type="int" Nullable="false" />
+          <Property Name="Remarques" Type="nvarchar" MaxLength="200" />
+          <Property Name="Etat" Type="nchar" MaxLength="5" Nullable="false" />
+          <Property Name="CoursOblig" Type="varchar" MaxLength="100" />
+          <Property Name="CoursRecom" Type="varchar" MaxLength="100" />
+          <Property Name="userId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="IndActif" Type="nchar" MaxLength="1" />
+          <Property Name="Raison" Type="nchar" MaxLength="5" />
+          <Property Name="DetailsRaison" Type="varchar(max)" />
+        </EntityType>
+        <EntityType Name="Profil">
+          <Key>
+            <PropertyRef Name="CodeProfil" />
+          </Key>
+          <Property Name="CodeProfil" Type="nchar" MaxLength="5" Nullable="false" />
+          <Property Name="DescProfil" Type="nchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Raison">
+          <Key>
+            <PropertyRef Name="CodeRaison" />
+          </Key>
+          <Property Name="CodeRaison" Type="nchar" MaxLength="5" Nullable="false" />
+          <Property Name="DescRaison" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="User_Profil">
+          <Key>
+            <PropertyRef Name="Profil" />
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="Profil" Type="nchar" MaxLength="5" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserOffre">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="UserOffreId" />
+          </Key>
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="UserOffreId" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_AspNetUsers_Profil">
+          <End Role="Profil" Type="Self.Profil" Multiplicity="0..1" />
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Profil">
+              <PropertyRef Name="CodeProfil" />
+            </Principal>
+            <Dependent Role="AspNetUsers">
+              <PropertyRef Name="UserProfil" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AspNetUserLogins" Type="Self.AspNetUserLogins" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserLogins">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_AspNetUserRoles_dbo_AspNetRoles_RoleId">
+          <End Role="AspNetRoles" Type="Self.AspNetRoles" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AspNetUserRoles" Type="Self.AspNetUserRoles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetRoles">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserRoles">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AspNetUserRoles" Type="Self.AspNetUserRoles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserRoles">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Livre_Cours_TypeReferences_Cours">
+          <End Role="Cours" Type="Self.Cours" Multiplicity="0..1" />
+          <End Role="Livre_Cours_TypeReferences" Type="Self.Livre_Cours_TypeReferences" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cours">
+              <PropertyRef Name="Sigle" />
+            </Principal>
+            <Dependent Role="Livre_Cours_TypeReferences">
+              <PropertyRef Name="SigleCours" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Livre_Cours_TypeReferences_Livre">
+          <End Role="Livre" Type="Self.Livre" Multiplicity="1" />
+          <End Role="Livre_Cours_TypeReferences" Type="Self.Livre_Cours_TypeReferences" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Livre">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Livre_Cours_TypeReferences">
+              <PropertyRef Name="IdLivre" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Offre_AspNetUsers">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="Offre" Type="Self.Offre" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Offre">
+              <PropertyRef Name="userId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Offre_Etat">
+          <End Role="Etat" Type="Self.Etat" Multiplicity="1" />
+          <End Role="Offre" Type="Self.Offre" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Etat">
+              <PropertyRef Name="CodeEtat" />
+            </Principal>
+            <Dependent Role="Offre">
+              <PropertyRef Name="Etat" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Offre_Raison">
+          <End Role="Raison" Type="Self.Raison" Multiplicity="0..1" />
+          <End Role="Offre" Type="Self.Offre" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Raison">
+              <PropertyRef Name="CodeRaison" />
+            </Principal>
+            <Dependent Role="Offre">
+              <PropertyRef Name="Raison" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Table_Livre">
+          <End Role="Livre" Type="Self.Livre" Multiplicity="1" />
+          <End Role="Offre" Type="Self.Offre" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Livre">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Offre">
+              <PropertyRef Name="IdLivre" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_Profil_Profil">
+          <End Role="Profil" Type="Self.Profil" Multiplicity="1" />
+          <End Role="User_Profil" Type="Self.User_Profil" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Profil">
+              <PropertyRef Name="CodeProfil" />
+            </Principal>
+            <Dependent Role="User_Profil">
+              <PropertyRef Name="Profil" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_Profil_Users">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="User_Profil" Type="Self.User_Profil" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="User_Profil">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserOffre_Offre">
+          <End Role="Offre" Type="Self.Offre" Multiplicity="1" />
+          <End Role="UserOffre" Type="Self.UserOffre" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Offre">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserOffre">
+              <PropertyRef Name="UserOffreId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserOffre_User">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="UserOffre" Type="Self.UserOffre" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserOffre">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ModelEFStoreContainer">
+          <EntitySet Name="__MigrationHistory" EntityType="Self.__MigrationHistory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRoles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AspNetUserClaims" EntityType="Self.AspNetUserClaims" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AspNetUserLogins" EntityType="Self.AspNetUserLogins" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AspNetUserRoles" EntityType="Self.AspNetUserRoles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Cours" EntityType="Self.Cours" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Etat" EntityType="Self.Etat" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Livre" EntityType="Self.Livre" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Livre_Cours_TypeReferences" EntityType="Self.Livre_Cours_TypeReferences" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Offre" EntityType="Self.Offre" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Profil" EntityType="Self.Profil" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Raison" EntityType="Self.Raison" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="User_Profil" EntityType="Self.User_Profil" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserOffre" EntityType="Self.UserOffre" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_AspNetUsers_Profil" Association="Self.FK_AspNetUsers_Profil">
+            <End Role="Profil" EntitySet="Profil" />
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserLogins" EntitySet="AspNetUserLogins" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_AspNetUserRoles_dbo_AspNetRoles_RoleId" Association="Self.FK_dbo_AspNetUserRoles_dbo_AspNetRoles_RoleId">
+            <End Role="AspNetRoles" EntitySet="AspNetRoles" />
+            <End Role="AspNetUserRoles" EntitySet="AspNetUserRoles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserRoles" EntitySet="AspNetUserRoles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Livre_Cours_TypeReferences_Cours" Association="Self.FK_Livre_Cours_TypeReferences_Cours">
+            <End Role="Cours" EntitySet="Cours" />
+            <End Role="Livre_Cours_TypeReferences" EntitySet="Livre_Cours_TypeReferences" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Livre_Cours_TypeReferences_Livre" Association="Self.FK_Livre_Cours_TypeReferences_Livre">
+            <End Role="Livre" EntitySet="Livre" />
+            <End Role="Livre_Cours_TypeReferences" EntitySet="Livre_Cours_TypeReferences" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Offre_AspNetUsers" Association="Self.FK_Offre_AspNetUsers">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="Offre" EntitySet="Offre" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Offre_Etat" Association="Self.FK_Offre_Etat">
+            <End Role="Etat" EntitySet="Etat" />
+            <End Role="Offre" EntitySet="Offre" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Offre_Raison" Association="Self.FK_Offre_Raison">
+            <End Role="Raison" EntitySet="Raison" />
+            <End Role="Offre" EntitySet="Offre" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Table_Livre" Association="Self.FK_Table_Livre">
+            <End Role="Livre" EntitySet="Livre" />
+            <End Role="Offre" EntitySet="Offre" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_Profil_Profil" Association="Self.FK_User_Profil_Profil">
+            <End Role="Profil" EntitySet="Profil" />
+            <End Role="User_Profil" EntitySet="User_Profil" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_Profil_Users" Association="Self.FK_User_Profil_Users">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="User_Profil" EntitySet="User_Profil" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserOffre_Offre" Association="Self.FK_UserOffre_Offre">
+            <End Role="Offre" EntitySet="Offre" />
+            <End Role="UserOffre" EntitySet="UserOffre" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserOffre_User" Association="Self.FK_UserOffre_User">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="UserOffre" EntitySet="UserOffre" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ModelEF" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="C__MigrationHistory">
+          <Key>
+            <PropertyRef Name="MigrationId" />
+            <PropertyRef Name="ContextKey" />
+          </Key>
+          <Property Name="MigrationId" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ContextKey" Type="String" MaxLength="300" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Model" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="false" />
+          <Property Name="ProductVersion" Type="String" MaxLength="32" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AspNetRole">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="AspNetUsers" Relationship="Self.AspNetUserRoles" FromRole="AspNetRoles" ToRole="AspNetUsers" />
+        </EntityType>
+        <EntityType Name="AspNetUserClaim">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ClaimType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ClaimValue" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="UserId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AspNetUserLogin">
+          <Key>
+            <PropertyRef Name="LoginProvider" />
+            <PropertyRef Name="ProviderKey" />
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="LoginProvider" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ProviderKey" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="AspNetUser" Relationship="Self.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUserLogins" ToRole="AspNetUsers" />
+        </EntityType>
+        <EntityType Name="AspNetUser">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="EmailConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="PasswordHash" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SecurityStamp" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumberConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="TwoFactorEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="LockoutEndDateUtc" Type="DateTime" Precision="3" />
+          <Property Name="LockoutEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
+          <Property Name="UserName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UserProfil" Type="String" MaxLength="5" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="AspNetUserLogins" Relationship="Self.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUsers" ToRole="AspNetUserLogins" />
+          <NavigationProperty Name="Profil" Relationship="Self.FK_AspNetUsers_Profil" FromRole="AspNetUsers" ToRole="Profil" />
+          <NavigationProperty Name="Offres" Relationship="Self.FK_Offre_AspNetUsers" FromRole="AspNetUsers" ToRole="Offre" />
+          <NavigationProperty Name="AspNetRoles" Relationship="Self.AspNetUserRoles" FromRole="AspNetUsers" ToRole="AspNetRoles" />
+          <NavigationProperty Name="Profils" Relationship="Self.User_Profil" FromRole="AspNetUsers" ToRole="Profil" />
+          <NavigationProperty Name="Offres1" Relationship="Self.UserOffre" FromRole="AspNetUsers" ToRole="Offre" />
+        </EntityType>
+        <EntityType Name="Cours">
+          <Key>
+            <PropertyRef Name="Sigle" />
+          </Key>
+          <Property Name="Sigle" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="NomCours" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Livre_Cours_TypeReferences" Relationship="Self.FK_Livre_Cours_TypeReferences_Cours" FromRole="Cours" ToRole="Livre_Cours_TypeReferences" />
+        </EntityType>
+        <EntityType Name="Etat">
+          <Key>
+            <PropertyRef Name="CodeEtat" />
+          </Key>
+          <Property Name="CodeEtat" Type="String" MaxLength="5" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="DesctEtat" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Offres" Relationship="Self.FK_Offre_Etat" FromRole="Etat" ToRole="Offre" />
+        </EntityType>
+        <EntityType Name="Livre">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CodeISBN_10" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Nom" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Image" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Auteur" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="DescriptLivre" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SousTitre" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Image2" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CodeISBN_13" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Livre_Cours_TypeReferences" Relationship="Self.FK_Livre_Cours_TypeReferences_Livre" FromRole="Livre" ToRole="Livre_Cours_TypeReferences" />
+          <NavigationProperty Name="Offres" Relationship="Self.FK_Table_Livre" FromRole="Livre" ToRole="Offre" />
+        </EntityType>
+        <EntityType Name="Livre_Cours_TypeReferences">
+          <Key>
+            <PropertyRef Name="IdLivre" />
+          </Key>
+          <Property Name="IdLivre" Type="Int32" Nullable="false" />
+          <Property Name="SigleCours" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="TypeReferences" Type="String" MaxLength="5" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="Cour" Relationship="Self.FK_Livre_Cours_TypeReferences_Cours" FromRole="Livre_Cours_TypeReferences" ToRole="Cours" />
+          <NavigationProperty Name="Livre" Relationship="Self.FK_Livre_Cours_TypeReferences_Livre" FromRole="Livre_Cours_TypeReferences" ToRole="Livre" />
+        </EntityType>
+        <EntityType Name="Offre">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdLivre" Type="Int32" Nullable="false" />
+          <Property Name="Remarques" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Etat" Type="String" MaxLength="5" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="CoursOblig" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CoursRecom" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="userId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="IndActif" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
+          <Property Name="Raison" Type="String" MaxLength="5" FixedLength="true" Unicode="true" />
+          <Property Name="DetailsRaison" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="AspNetUser" Relationship="Self.FK_Offre_AspNetUsers" FromRole="Offre" ToRole="AspNetUsers" />
+          <NavigationProperty Name="Etat1" Relationship="Self.FK_Offre_Etat" FromRole="Offre" ToRole="Etat" />
+          <NavigationProperty Name="Livre" Relationship="Self.FK_Table_Livre" FromRole="Offre" ToRole="Livre" />
+          <NavigationProperty Name="Raison1" Relationship="Self.FK_Offre_Raison" FromRole="Offre" ToRole="Raison" />
+          <NavigationProperty Name="AspNetUsers" Relationship="Self.UserOffre" FromRole="Offre" ToRole="AspNetUsers" />
+        </EntityType>
+        <EntityType Name="Profil">
+          <Key>
+            <PropertyRef Name="CodeProfil" />
+          </Key>
+          <Property Name="CodeProfil" Type="String" MaxLength="5" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="DescProfil" Type="String" MaxLength="50" FixedLength="true" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="AspNetUsers" Relationship="Self.FK_AspNetUsers_Profil" FromRole="Profil" ToRole="AspNetUsers" />
+          <NavigationProperty Name="AspNetUsers1" Relationship="Self.User_Profil" FromRole="Profil" ToRole="AspNetUsers" />
+        </EntityType>
+        <EntityType Name="Raison">
+          <Key>
+            <PropertyRef Name="CodeRaison" />
+          </Key>
+          <Property Name="CodeRaison" Type="String" MaxLength="5" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="DescRaison" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Offres" Relationship="Self.FK_Offre_Raison" FromRole="Raison" ToRole="Offre" />
+        </EntityType>
+        <Association Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
+          <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AspNetUserLogins" Type="Self.AspNetUserLogin" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserLogins">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AspNetUsers_Profil">
+          <End Role="Profil" Type="Self.Profil" Multiplicity="0..1" />
+          <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Profil">
+              <PropertyRef Name="CodeProfil" />
+            </Principal>
+            <Dependent Role="AspNetUsers">
+              <PropertyRef Name="UserProfil" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Offre_AspNetUsers">
+          <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="1" />
+          <End Role="Offre" Type="Self.Offre" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Offre">
+              <PropertyRef Name="userId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Livre_Cours_TypeReferences_Cours">
+          <End Role="Cours" Type="ModelEF.Cours" Multiplicity="0..1" />
+          <End Role="Livre_Cours_TypeReferences" Type="Self.Livre_Cours_TypeReferences" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cours">
+              <PropertyRef Name="Sigle" />
+            </Principal>
+            <Dependent Role="Livre_Cours_TypeReferences">
+              <PropertyRef Name="SigleCours" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Offre_Etat">
+          <End Role="Etat" Type="Self.Etat" Multiplicity="1" />
+          <End Role="Offre" Type="Self.Offre" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Etat">
+              <PropertyRef Name="CodeEtat" />
+            </Principal>
+            <Dependent Role="Offre">
+              <PropertyRef Name="Etat" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Livre_Cours_TypeReferences_Livre">
+          <End Role="Livre" Type="Self.Livre" Multiplicity="1" />
+          <End Role="Livre_Cours_TypeReferences" Type="Self.Livre_Cours_TypeReferences" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Livre">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Livre_Cours_TypeReferences">
+              <PropertyRef Name="IdLivre" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Table_Livre">
+          <End Role="Livre" Type="Self.Livre" Multiplicity="1" />
+          <End Role="Offre" Type="Self.Offre" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Livre">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Offre">
+              <PropertyRef Name="IdLivre" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Offre_Raison">
+          <End Role="Raison" Type="Self.Raison" Multiplicity="0..1" />
+          <End Role="Offre" Type="Self.Offre" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Raison">
+              <PropertyRef Name="CodeRaison" />
+            </Principal>
+            <Dependent Role="Offre">
+              <PropertyRef Name="Raison" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="AspNetUserRoles">
+          <End Role="AspNetRoles" Type="Self.AspNetRole" Multiplicity="*" />
+          <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="*" />
+        </Association>
+        <Association Name="User_Profil">
+          <End Role="Profil" Type="Self.Profil" Multiplicity="*" />
+          <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="*" />
+        </Association>
+        <Association Name="UserOffre">
+          <End Role="Offre" Type="Self.Offre" Multiplicity="*" />
+          <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="C__MigrationHistory" EntityType="Self.C__MigrationHistory" />
+          <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRole" />
+          <EntitySet Name="AspNetUserClaims" EntityType="Self.AspNetUserClaim" />
+          <EntitySet Name="AspNetUserLogins" EntityType="Self.AspNetUserLogin" />
+          <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUser" />
+          <EntitySet Name="Cours" EntityType="ModelEF.Cours" />
+          <EntitySet Name="Etats" EntityType="Self.Etat" />
+          <EntitySet Name="Livres" EntityType="Self.Livre" />
+          <EntitySet Name="Livre_Cours_TypeReferences" EntityType="Self.Livre_Cours_TypeReferences" />
+          <EntitySet Name="Offres" EntityType="Self.Offre" />
+          <EntitySet Name="Profils" EntityType="Self.Profil" />
+          <EntitySet Name="Raisons" EntityType="Self.Raison" />
+          <AssociationSet Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserLogins" EntitySet="AspNetUserLogins" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AspNetUsers_Profil" Association="Self.FK_AspNetUsers_Profil">
+            <End Role="Profil" EntitySet="Profils" />
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Offre_AspNetUsers" Association="Self.FK_Offre_AspNetUsers">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="Offre" EntitySet="Offres" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Livre_Cours_TypeReferences_Cours" Association="Self.FK_Livre_Cours_TypeReferences_Cours">
+            <End Role="Cours" EntitySet="Cours" />
+            <End Role="Livre_Cours_TypeReferences" EntitySet="Livre_Cours_TypeReferences" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Offre_Etat" Association="Self.FK_Offre_Etat">
+            <End Role="Etat" EntitySet="Etats" />
+            <End Role="Offre" EntitySet="Offres" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Livre_Cours_TypeReferences_Livre" Association="Self.FK_Livre_Cours_TypeReferences_Livre">
+            <End Role="Livre" EntitySet="Livres" />
+            <End Role="Livre_Cours_TypeReferences" EntitySet="Livre_Cours_TypeReferences" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Table_Livre" Association="Self.FK_Table_Livre">
+            <End Role="Livre" EntitySet="Livres" />
+            <End Role="Offre" EntitySet="Offres" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Offre_Raison" Association="Self.FK_Offre_Raison">
+            <End Role="Raison" EntitySet="Raisons" />
+            <End Role="Offre" EntitySet="Offres" />
+          </AssociationSet>
+          <AssociationSet Name="AspNetUserRoles" Association="Self.AspNetUserRoles">
+            <End Role="AspNetRoles" EntitySet="AspNetRoles" />
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+          </AssociationSet>
+          <AssociationSet Name="User_Profil" Association="Self.User_Profil">
+            <End Role="Profil" EntitySet="Profils" />
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+          </AssociationSet>
+          <AssociationSet Name="UserOffre" Association="Self.UserOffre">
+            <End Role="Offre" EntitySet="Offres" />
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ModelEFStoreContainer" CdmEntityContainer="Entities">
+          <EntitySetMapping Name="C__MigrationHistory">
+            <EntityTypeMapping TypeName="ModelEF.C__MigrationHistory">
+              <MappingFragment StoreEntitySet="__MigrationHistory">
+                <ScalarProperty Name="MigrationId" ColumnName="MigrationId" />
+                <ScalarProperty Name="ContextKey" ColumnName="ContextKey" />
+                <ScalarProperty Name="Model" ColumnName="Model" />
+                <ScalarProperty Name="ProductVersion" ColumnName="ProductVersion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AspNetRoles">
+            <EntityTypeMapping TypeName="ModelEF.AspNetRole">
+              <MappingFragment StoreEntitySet="AspNetRoles">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AspNetUserClaims">
+            <EntityTypeMapping TypeName="ModelEF.AspNetUserClaim">
+              <MappingFragment StoreEntitySet="AspNetUserClaims">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ClaimType" ColumnName="ClaimType" />
+                <ScalarProperty Name="ClaimValue" ColumnName="ClaimValue" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AspNetUserLogins">
+            <EntityTypeMapping TypeName="ModelEF.AspNetUserLogin">
+              <MappingFragment StoreEntitySet="AspNetUserLogins">
+                <ScalarProperty Name="LoginProvider" ColumnName="LoginProvider" />
+                <ScalarProperty Name="ProviderKey" ColumnName="ProviderKey" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AspNetUsers">
+            <EntityTypeMapping TypeName="ModelEF.AspNetUser">
+              <MappingFragment StoreEntitySet="AspNetUsers">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="EmailConfirmed" ColumnName="EmailConfirmed" />
+                <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
+                <ScalarProperty Name="SecurityStamp" ColumnName="SecurityStamp" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="PhoneNumberConfirmed" ColumnName="PhoneNumberConfirmed" />
+                <ScalarProperty Name="TwoFactorEnabled" ColumnName="TwoFactorEnabled" />
+                <ScalarProperty Name="LockoutEndDateUtc" ColumnName="LockoutEndDateUtc" />
+                <ScalarProperty Name="LockoutEnabled" ColumnName="LockoutEnabled" />
+                <ScalarProperty Name="AccessFailedCount" ColumnName="AccessFailedCount" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="UserProfil" ColumnName="UserProfil" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Cours">
+            <EntityTypeMapping TypeName="ModelEF.Cours">
+              <MappingFragment StoreEntitySet="Cours">
+                <ScalarProperty Name="Sigle" ColumnName="Sigle" />
+                <ScalarProperty Name="NomCours" ColumnName="NomCours" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Etats">
+            <EntityTypeMapping TypeName="ModelEF.Etat">
+              <MappingFragment StoreEntitySet="Etat">
+                <ScalarProperty Name="CodeEtat" ColumnName="CodeEtat" />
+                <ScalarProperty Name="DesctEtat" ColumnName="DesctEtat" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Livres">
+            <EntityTypeMapping TypeName="ModelEF.Livre">
+              <MappingFragment StoreEntitySet="Livre">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="CodeISBN_10" ColumnName="CodeISBN_10" />
+                <ScalarProperty Name="Nom" ColumnName="Nom" />
+                <ScalarProperty Name="Image" ColumnName="Image" />
+                <ScalarProperty Name="Auteur" ColumnName="Auteur" />
+                <ScalarProperty Name="DescriptLivre" ColumnName="DescriptLivre" />
+                <ScalarProperty Name="SousTitre" ColumnName="SousTitre" />
+                <ScalarProperty Name="Image2" ColumnName="Image2" />
+                <ScalarProperty Name="CodeISBN_13" ColumnName="CodeISBN_13" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Livre_Cours_TypeReferences">
+            <EntityTypeMapping TypeName="ModelEF.Livre_Cours_TypeReferences">
+              <MappingFragment StoreEntitySet="Livre_Cours_TypeReferences">
+                <ScalarProperty Name="IdLivre" ColumnName="IdLivre" />
+                <ScalarProperty Name="SigleCours" ColumnName="SigleCours" />
+                <ScalarProperty Name="TypeReferences" ColumnName="TypeReferences" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Offres">
+            <EntityTypeMapping TypeName="ModelEF.Offre">
+              <MappingFragment StoreEntitySet="Offre">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="IdLivre" ColumnName="IdLivre" />
+                <ScalarProperty Name="Remarques" ColumnName="Remarques" />
+                <ScalarProperty Name="Etat" ColumnName="Etat" />
+                <ScalarProperty Name="CoursOblig" ColumnName="CoursOblig" />
+                <ScalarProperty Name="CoursRecom" ColumnName="CoursRecom" />
+                <ScalarProperty Name="userId" ColumnName="userId" />
+                <ScalarProperty Name="IndActif" ColumnName="IndActif" />
+                <ScalarProperty Name="Raison" ColumnName="Raison" />
+                <ScalarProperty Name="DetailsRaison" ColumnName="DetailsRaison" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Profils">
+            <EntityTypeMapping TypeName="ModelEF.Profil">
+              <MappingFragment StoreEntitySet="Profil">
+                <ScalarProperty Name="CodeProfil" ColumnName="CodeProfil" />
+                <ScalarProperty Name="DescProfil" ColumnName="DescProfil" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Raisons">
+            <EntityTypeMapping TypeName="ModelEF.Raison">
+              <MappingFragment StoreEntitySet="Raison">
+                <ScalarProperty Name="CodeRaison" ColumnName="CodeRaison" />
+                <ScalarProperty Name="DescRaison" ColumnName="DescRaison" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="AspNetUserRoles" TypeName="ModelEF.AspNetUserRoles" StoreEntitySet="AspNetUserRoles">
+            <EndProperty Name="AspNetRoles">
+              <ScalarProperty Name="Id" ColumnName="RoleId" />
+            </EndProperty>
+            <EndProperty Name="AspNetUsers">
+              <ScalarProperty Name="Id" ColumnName="UserId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="User_Profil" TypeName="ModelEF.User_Profil" StoreEntitySet="User_Profil">
+            <EndProperty Name="Profil">
+              <ScalarProperty Name="CodeProfil" ColumnName="Profil" />
+            </EndProperty>
+            <EndProperty Name="AspNetUsers">
+              <ScalarProperty Name="Id" ColumnName="UserId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="UserOffre" TypeName="ModelEF.UserOffre" StoreEntitySet="UserOffre">
+            <EndProperty Name="Offre">
+              <ScalarProperty Name="Id" ColumnName="UserOffreId" />
+            </EndProperty>
+            <EndProperty Name="AspNetUsers">
+              <ScalarProperty Name="Id" ColumnName="UserId" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Aucun" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

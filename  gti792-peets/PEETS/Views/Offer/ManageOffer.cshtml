@@ -33,6 +33,7 @@
 }
 
 <div style="padding-top: 7px;padding-bottom: 40px" class="col-md-6">
+    @*<label style="width: 180px">Code ISBN</label> @Html.TextBoxFor(m => m.Livre.CodeIsbn, null, new { style = "width: 200px" }) <span style="font-weight: bolder;color: red"> *</span>*@
     <a href="#addOfferDialog" class="btn btn-warning btn-lg glyphicon-plus" data-toggle="modal"> Ajouter une offre</a>
 </div>
 
@@ -150,6 +151,6 @@
 }
 
 @section Scripts {
-        @Scripts.Render("~/bundles/jqueryval")
-        <script src="~/Scripts/bootstrap-filestyle-0.1.0.min.js"> </script>
-    }
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/bootstrap-filestyle-0.1.0.min.js"> </script>
+}
