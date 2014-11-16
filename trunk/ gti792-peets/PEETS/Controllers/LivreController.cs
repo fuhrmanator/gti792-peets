@@ -6,8 +6,10 @@ using System.Linq;
 using System.Runtime.Versioning;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 using System.Web.Services;
 using System.Windows.Forms;
+using ComputerBeacon.Facebook.Graph;
 using Microsoft.Ajax.Utilities;
 using PEETS.Models;
 using System.Data.SqlClient;
@@ -18,7 +20,7 @@ namespace PEETS.Controllers
     {
         // Create: Livre
         [WebMethod]
-        public ActionResult Create(Livre livreModel)
+        public ActionResult Create(LivreBean livreModel)
         {
 
 
@@ -115,6 +117,44 @@ namespace PEETS.Controllers
             }
 
             return View("/Views/Home/Index.cshtml");
+        }
+
+        public JsonResult ObtenirNomLivres(int isbn)
+        {
+            SqlConnection cnn = null;
+            var connetionString = Properties.Settings.Default.dbConnectionString;
+            var nomLivres = new List<NomAutoComplete>();
+            var sql = string.Format("SELECT distinct CodeISBN_13, Nom FROM Livre " + "Where codeisbn_10 like '%{0}%' or codeisbn_13 like '%{0}%'", isbn);
+
+            cnn = new SqlConnection(connetionString);
+
+            try
+            {
+                cnn.Open();
+                var command = new SqlCommand(sql, cnn);
+                var dataReader = command.ExecuteReader();
+                
+                while (dataReader.Read())
+                {
+                    var nomAuto = new NomAutoComplete
+                    {
+                        CodeIsbn = dataReader.GetValue(0).ToString(),
+                        Nom = dataReader.GetValue(1).ToString()
+                    };
+
+                    nomLivres.Add(nomAuto);
+                }
+
+                dataReader.Close();
+                command.Dispose();
+                cnn.Close();
+            }
+            catch (Exception e)
+            {
+
+            }
+
+            return Json(nomLivres, JsonRequestBehavior.AllowGet);
         }
     }
 

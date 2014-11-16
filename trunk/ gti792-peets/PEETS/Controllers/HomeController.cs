@@ -21,7 +21,7 @@ namespace PEETS.Controllers
 
         public ActionResult ObtenirListeLivresParPage(string page, int pageActuel, string titre, string isbn, string auteur, string sigle)
         {
-            var pageTotal = Offre.GetTotalRows()/8;
+            var pageTotal = OffreBean.GetTotalRows();
             var count = pageTotal / 8.0;
             var pageCount = (int)Math.Ceiling((decimal)count);
             var newPageActuel = GererPage(page, pageActuel, pageCount);
@@ -82,9 +82,9 @@ namespace PEETS.Controllers
             return pageNumber;
         }
 
-        public List<Offre> ObtenirListeLivres(int start = 1, int last = 8, string reqRech = "")
+        public List<OffreBean> ObtenirListeLivres(int start = 1, int last = 8, string reqRech = "")
         {
-            List<Offre> offres = null;
+            List<OffreBean> offres = null;
             SqlConnection cnn = null;
             string connetionString = Properties.Settings.Default.dbConnectionString;
             SqlCommand command = null;
@@ -105,13 +105,13 @@ namespace PEETS.Controllers
             {
                 cnn.Open();
                 command = new SqlCommand(sql, cnn);
-                offres = new List<Offre>();
+                offres = new List<OffreBean>();
 
                 SqlDataReader dataReader = command.ExecuteReader();
           
                 while (dataReader.Read())
                 {
-                    var offre = new Offre
+                    var offre = new OffreBean
                     {
                         NoOffre = (int) dataReader.GetValue(0),
                         EtatLivre = dataReader.GetValue(1).ToString(),
@@ -143,7 +143,7 @@ namespace PEETS.Controllers
 
         public ActionResult Rechercher(string titre, string isbn, string auteur, string sigle, int pageActuel)
         {
-            var totalRows = Offre.GetTotalRows();
+            var totalRows = OffreBean.GetTotalRows();
             var count = totalRows / 8.0;
             var pageCount = (int)Math.Ceiling((decimal)count);
             var newPageActuel = GererPage("", pageActuel, pageCount);
@@ -179,7 +179,7 @@ namespace PEETS.Controllers
             SqlConnection cnn = null;
             string connetionString = Properties.Settings.Default.dbConnectionString;
             SqlCommand command = null;
-            Offre offre = null;
+            OffreBean offre = null;
             string sql = "SELECT o.Id, e.DesctEtat, o.CoursOblig, o.CoursRecom, l.CodeISBN_10, " +
                          "l.CodeISBN_13, l.Nom, l.Image, o.Remarques, u.Email, u.PhoneNumber, l.Auteur " +
                          "FROM Offre o " +
@@ -198,7 +198,7 @@ namespace PEETS.Controllers
 
                 while (dataReader.Read())
                 {
-                    offre = new Offre
+                    offre = new OffreBean
                     {
                         NoOffre = (int)dataReader.GetValue(0),
                         EtatLivre = dataReader.GetValue(1).ToString(),
@@ -222,7 +222,7 @@ namespace PEETS.Controllers
             }
             catch (Exception ex)
             {
-                offre = new Offre();
+                offre = new OffreBean();
                 offre.Message = "Une erreur est survenue";
             }
 

@@ -1,5 +1,5 @@
 ﻿@using PEETS.Models;
-@model List<PEETS.Models.Offre>
+@model List<OffreBean>
 @{
     ViewBag.Title = "Acceuil";
     int pageActuel = ViewBag.PageActuel;
@@ -47,7 +47,7 @@
 <div style="text-align: center" class="col-md-12">
 
     @{
-        var total = Offre.GetTotalRows();
+        var total = OffreBean.GetTotalRows();
         var count = total / 8.0;
         var pageCount = (int)Math.Ceiling((decimal)count);   
     }

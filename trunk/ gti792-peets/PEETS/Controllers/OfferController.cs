@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Dynamic;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
@@ -29,9 +30,9 @@ namespace PEETS.Controllers
             return View("ManageOffer", offreModel);
         }
 
-        public List<Offre> ObtenirListeOffresUtil()
+        public List<OffreBean> ObtenirListeOffresUtil()
         {
-            List<Offre> offres = null;
+            List<OffreBean> offres = null;
             SqlConnection cnn = null;
             var connetionString = Properties.Settings.Default.dbConnectionString;
             var sql = "SELECT o.Id, l.Nom " +
@@ -45,13 +46,13 @@ namespace PEETS.Controllers
             {
                 cnn.Open();
                 var command = new SqlCommand(sql, cnn);
-                offres = new List<Offre>();
+                offres = new List<OffreBean>();
 
                 var dataReader = command.ExecuteReader();
 
                 while (dataReader.Read())
                 {
-                    var offre = new Offre
+                    var offre = new OffreBean
                     {
                         NoOffre = (int)dataReader.GetValue(0),
                         NomLivre = dataReader.GetValue(1).ToString(),
@@ -123,42 +124,56 @@ namespace PEETS.Controllers
                 return View("ManageOffer", offre);
         }
 
+        private string Encoding(string texte)
+        {
+            texte = texte.Replace("Ã", "à");
+            texte = texte.Replace("Ã©", "é");
+            texte = texte.Replace("à®", "î");
+            texte = texte.Replace("à©", "é");
+            texte = texte.Replace("Ã¨", "è");
+            texte = texte.Replace("à¨", "è");
+            texte = texte.Replace("Ã‰", "É");
+            texte = texte.Replace("à‰", "É");
+            texte = texte.Replace("à§", "ç");
+            texte = texte.Replace("Ãª", "ê");
+            texte = texte.Replace("àª", "ê");
+            texte = texte.Replace("Ã¢", "â");
+            texte = texte.Replace("à¢", "â");
+            return texte;
+        }
+
         public int? TraiterLivre(LivreModel livre)
         {
-            int? noLivreReturn = livreExiste(livre.CodeIsbn);
+            if (livre == null) return null;
+            var noLivreReturn = livreExiste(livre.CodeIsbn);
+            if (noLivreReturn != null) return noLivreReturn;
 
-            if (noLivreReturn == null)
-            {
-                var url = "https://www.googleapis.com/books/v1/volumes?q=isbn:" + livre.CodeIsbn;
-                var webClient = new System.Net.WebClient();
-                var json = webClient.DownloadString(url);
-                var gRresponse = JsonConvert.DeserializeObject<GoogleResponse>(json);
+            var url = "https://www.googleapis.com/books/v1/volumes?q=isbn:" + livre.CodeIsbn;
+            var webClient = new System.Net.WebClient();
+            var json = Encoding(webClient.DownloadString(url));  
+             
+            var gRresponse = JsonConvert.DeserializeObject<GoogleResponse>(json);
+            if (gRresponse.Items == null) return null;
 
-                if (gRresponse.Items == null) return null;
+            var volumeInfo = gRresponse.Items[0].VolumeInfo;
+            if (volumeInfo == null) return null;
 
-                var volumeInfo = gRresponse.Items[0].VolumeInfo;
+            SqlConnection cnn = null;
+            string connetionString = Properties.Settings.Default.dbConnectionString;
+            string sql = "INSERT INTO Livre(CodeIsbn_10, Nom, Image, Auteur, Image2, CodeIsbn_13, SousTitre) OUTPUT Inserted.ID " +
+                         "VALUES(@CodeIsbn_10, @Nom, @Image, @Auteur, @Image2, @CodeIsbn_13, @SousTitre) SET @id=SCOPE_IDENTITY()";
 
-                if (volumeInfo != null)
-                {
-                    SqlConnection cnn = null;
-                    string connetionString = Properties.Settings.Default.dbConnectionString;
-                    string sql = "INSERT INTO Livre(CodeIsbn_10, Nom, Image, Auteur, Image2, CodeIsbn_13, SousTitre) OUTPUT Inserted.ID " +
-                                    "VALUES(@CodeIsbn_10, @Nom, @Image, @Auteur, @Image2, @CodeIsbn_13, @SousTitre) SET @id=SCOPE_IDENTITY()";
+            cnn = new SqlConnection(connetionString);
+            cnn.Open();
+            var command = new SqlCommand(sql, cnn);
 
-                    cnn = new SqlConnection(connetionString);
-                    cnn.Open();
-                    var command = new SqlCommand(sql, cnn);
+            RemplirParametreLivre(command, volumeInfo);
+            command.ExecuteNonQuery();
 
-                    RemplirParametreLivre(command, volumeInfo);
-                    command.ExecuteNonQuery();
-
-                    var id = (int?)command.Parameters["@id"].Value;
-                    noLivreReturn = id;
-                    command.Dispose();
-                    cnn.Close();
-                }              
-              
-            }
+            var id = (int?)command.Parameters["@id"].Value;
+            noLivreReturn = id;
+            command.Dispose();
+            cnn.Close();
 
             return noLivreReturn;
         }

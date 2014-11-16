@@ -1,4 +1,32 @@
-﻿function DetailsOnSuccess(data) {
+﻿$(function () {
+   
+    $("#Livre_CodeIsbn").autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                url: '/Livre/ObtenirNomLivres',
+                type: "POST",
+                dataType: "json",
+                data: { isbn: request.term },
+                success: function (data) {
+                    //alert(data);
+                    response($.map(data, function(item) {
+                        return { label: item.Nom + "(ISBN 13: " + item.CodeIsbn + ")", value: item.CodeIsbn };
+                    }));
+                }
+            });
+        },
+        messages: {
+            noResults: "", results: ""
+        },
+        minLength: 2,
+        select: function (event, ui) {
+            $('#Livre_CodeIsbn').val(ui.item.code);
+        }
+    });
+
+});
+
+function DetailsOnSuccess(data) {
 
     if (data != null) {
 

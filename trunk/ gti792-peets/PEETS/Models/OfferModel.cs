@@ -89,7 +89,7 @@ namespace PEETS.Models
 
         public TypeMessage TypeMessage { get; set; }
 
-        public List<Offre> ListeOffresUtil { get; set; }
+        public List<OffreBean> ListeOffresUtil { get; set; }
     }
 
 }
