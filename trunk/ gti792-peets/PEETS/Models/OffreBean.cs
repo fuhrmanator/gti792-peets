@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Web;
+using System.Web.Mvc;
 
 namespace PEETS.Models
 {
@@ -29,18 +30,18 @@ namespace PEETS.Models
         public string Auteur { get; set; }
         public string SousTitre { get; set; }
         public bool Statut { get; set; }
-        public static int GetTotalRows()
+        public static int GetTotalRows(string recherch)
         {
             var totalRows = 0;
 
             string connetionString = Properties.Settings.Default.dbConnectionString;
             var cnn = new SqlConnection(connetionString);
             cnn.Open();
-            const string sql = "SELECT Count(o.Id) " +
+            string sql = "SELECT Count(o.Id) " +
                                "FROM Offre o " +
                                "JOIN Livre l On o.IdLivre = l.Id " +
                                "JOIN Etat e ON o.Etat = e.CodeEtat " +
-                               "Where o.IndActif = '1'";
+                               "Where o.IndActif = '1' " + recherch;
 
             var command = new SqlCommand(sql, cnn);
             SqlDataReader dataReader = command.ExecuteReader();
@@ -51,5 +52,23 @@ namespace PEETS.Models
 
             return totalRows;
         }
+
+        public IEnumerable<SelectListItem> TriItems = new List<SelectListItem>
+        {
+            new SelectListItem  {Value = "l.Nom", Text = "Nom"}, 
+            new SelectListItem  {Value = "o.Etat", Text = "État"}, 
+            new SelectListItem  {Value = "l.CodeISBN_13", Text = "Code Isbn"}, 
+            new SelectListItem {Value = "l.Auteur", Text = "Auteur"}
+        };
+
+        public string SelectedTriItem { get; set; }
+
+        public IEnumerable<SelectListItem> OrdreItems = new List<SelectListItem>
+        {
+            new SelectListItem  {Value = "ASC", Text = "Croissant"}, 
+            new SelectListItem  {Value = "DESC", Text = "Décroissant"}
+        };
+
+        public string SelectedOrdreItem { get; set; }
     }
 }

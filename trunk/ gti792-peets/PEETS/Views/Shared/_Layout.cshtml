@@ -15,9 +15,11 @@
                 color: white!important;
             }
         </style>
-
-
     </head>
+@{
+    string menuItemActive = ViewBag.menuItemActive;
+}
+
 <body>
     <div id="page">
         
@@ -34,12 +36,17 @@
                 
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav navbar-right" style="padding-right: 20px">
-                        <li class="nav active">@Html.ActionLink("Accueil", "Index", "Home")</li>
-                        <li class="nav">@Html.Partial("_LoginPartial")</li>
-                        <li class="nav">@Html.Partial("_LinkOffre")</li>
-                        @*<li class="nav">@Html.ActionLink("Contact", "Contact", "Home")</li> 
-                        <li class="nav">@Html.ActionLink("À propos de", "About", "Home")</li>*@
-                        <li class="nav">@Html.Partial("_LoginPartial2")</li>
+                        <li id="Accueil" @if (menuItemActive == "Index" || menuItemActive == null) { <text> class="nav active" </text>   } else { <text> class="nav" </text> }>@Html.ActionLink("Accueil", "Index", "Home")</li>
+
+                        <li id="Compte" @if (menuItemActive == "Compte") { <text> class="nav active" </text> } else { <text> class="nav" </text> }>@Html.Partial("_LoginPartial")</li>
+
+                        <li id="Offre" @if (menuItemActive == "Offre") { <text> class="nav active" </text>  } else { <text> class="nav" </text>  }>@Html.Partial("_LinkOffre")</li>
+
+                        <li class="nav" @if (menuItemActive == "Connecter") { <text> class="nav active" </text>   } else { <text> class="nav" </text>   }>@Html.Partial("_LoginPartial2")</li>
+                        <li id="About" @if (menuItemActive == "About") { <text> class="nav active" </text>  } else { <text> class="nav" </text>  }>@Html.ActionLink("À propos de", "About", "Home")</li>
+                       
+                        <li id="Contact" @if (menuItemActive == "Contact") { <text> class="nav active" </text>   } else { <text> class="nav" </text>   }>@Html.ActionLink("Contact", "Contact", "Home")</li>
+
                     </ul>
                 </div>
 
@@ -57,15 +64,14 @@
             
             <hr/>
 
-            <section id="main" class="col-md-9 col-sm-10" style="border-right-style: outset;height: 730px;margin-top: 15px">
+            <section id="main" class="col-md-9 col-sm-10" style="border-right-style: outset;height: 800px;margin-top: 15px">
                 @RenderBody()
             </section>
 
-    @*@using (Html.BeginForm("Rechercher", "Home", new { }, FormMethod.Post))
-    {*@
-        <section id="sidebar" class="col-md-3 col-sm-2" style="background-color: #aa4200;height: 745px">
+
+        <section id="sidebar" class="col-md-3 col-sm-2" style="background-color: #aa4200;height: 815px">
             <div style="margin-top: 15px;text-align: center">
-                <div style="border-style: solid;border-color: #bf3e11;padding-bottom: 30px">
+                <div id="recherche" style="border-style: solid;border-color: #bf3e11;padding-bottom: 30px; display: none">
                     <h4 style="color: yellow">Recherche</h4>
                     <div>
                         <input id="nom" name="nom" style="height: 30px" type="text" placeholder="Nom du livre" value="@ViewBag.NomLivre">
@@ -79,11 +85,8 @@
                     <div>
                         <input id="sigle" name="sigle" style="height: 30px" type="text" placeholder="Sigle du cours" value="@ViewBag.Sigle">
                     </div>
-                    @*<div>
-                            <input style="height: 30px" type="text" placeholder="Description du livre">
-                        </div>*@
                     <div style="padding-top: 7px">
-                        <button style="width: 150px;" onclick="Rechercher()"  class="btn btn-sm btn-warning">Rechercher</button>
+                        <button style="width: 150px;" onclick="Rechercher()" class="btn btn-sm btn-warning">Rechercher</button>
                     </div>
                 </div>
             </div>
@@ -91,7 +94,7 @@
             <div style="border-style: solid;border-color: #bf3e11;padding-bottom: 30px;margin-top: 15px;height: 430px;padding-left: 10px;padding-right: 10px">
                 <h4 style="color: yellow;text-decoration:underline;text-align: center">Conseils sur l'envirronement</h4>           
                 <p>
-                    <h5 style="font-weight: bold;text-align: center">Recyclage du papier: réduire, <span class="text-muted">réutiliser</span>, recycler: les trois R d'une meilleure gestion</h5>
+                    <h5 style="font-weight: bold;text-align: center;color: greenyellow">Recyclage du papier: réduire, <span class="text-muted">réutiliser</span>, recycler: les trois R d'une meilleure gestion</h5>
                 </p>
                 <p style="text-align: justify;color: yellow">
                     Pour arriver à un équilibre écologique dans l'univers du papier, il est important d'en réduire la consommation, de le réutiliser au maximum et de le recycler systématiquement. Le recyclage du papier est un acte simple, mais puissant, qui favorise le changement chez les personnes et dans les entreprises. À titre de citoyens, nous pouvons tous contribuer à changer les choses de multiples façons.
@@ -103,7 +106,7 @@
             </div>
 
         </section>
-    @*}*@
+ 
         </section>       
         
         <hr />
@@ -123,6 +126,7 @@
     <script src="~/Scripts/MicrosoftAjax.js"></script>
     <script src="~/Scripts/MicrosoftMvcAjax.js"></script>
     <script src="~/Scripts/Site.js"></script>
+    <script src="~/Scripts/spin.min.js"></script>
     @RenderSection("scripts", required: false)
 </body>
 </html>

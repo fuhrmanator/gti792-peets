@@ -3,6 +3,8 @@
 @{
     ViewBag.Title = "Acceuil";
     int pageActuel = ViewBag.PageActuel;
+    string rech = ViewBag.ReqRech;
+    var total = OffreBean.GetTotalRows(rech);
 }
 
 <style>
@@ -14,103 +16,127 @@
         border: 1px groove;
     }
 </style>
+<div id="listeOffre">
+    
+    <div style="text-align: center">
+        <p style="color: orangered;font-weight: bolder">Échangé vos livres, c'est penser à l'avenir de la planète et penser à faire des économies!</p>
+    </div>
 
-<div style="text-align: center">
-    <p style="color: orangered;font-weight: bolder">Échangé vos livres, c'est penser à l'avenir de la planète et penser à faire des économies!</p>
-</div>
+    <div id="labelNbLivre" style="padding-left: 40px;padding-top: 15px;padding-bottom: 15px">
+        <label>Nombre de livres trouvés: </label> <span style="font-weight: bold;padding-left: 10px">@total</span>
+    </div>
 
-<div id="affichageLivre">
-    @{
-        foreach (var offre in Model)
+    @{  if (Model.Count > 4)
         {
-            <div class="col-md-3 ajaxLink" style="text-align: center;padding-top: 20px;" title="@offre.NomLivre">
-                <p>
-                    <img src="@offre.ImageLivre" style="width: 120px!important; height: 140px!important" alt="x" class="img-thumbnail" />
-                </p>
-                <h5 style=" color: red;height: 42px;font-weight: bold">@offre.NomLivre</h5>
-                <h6><span style="font-weight: bold">Code ISBN 13: </span>@offre.CodeIsbn_13</h6>
-                <div><span style="font-weight: bold">État: </span>@offre.EtatLivre</div>
-                @using (Ajax.BeginForm("GetDetailsJson", new { noOffre = @offre.NoOffre },
-                    new AjaxOptions
-                    {
-                        OnSuccess = "DetailsOnSuccess",
-                        OnFailure = "DetailsOnFailure"
-                    }))
-                {
-                    <p style="padding-top: 5px"><input class="btn btn-danger" value="Détails" type="submit" id="btnOffre_@offre.NoOffre" data-toggle="modal" /></p>
-                }
+            <div style="padding-top: 10px;text-align: center">
+                <table>
+                    <tr>
+                        <td><label style="width: 180px">Trier par: </label> @Html.DropDownListFor(m => m.First().SelectedTriItem, Model.First().TriItems, new { style = "width: 100px" })</td>
+                        <td><label style="width: 180px">Ordre: </label> @Html.DropDownListFor(m => m.First().SelectedOrdreItem, Model.First().OrdreItems, new { style = "width: 100px" })</td>
+                        <td style="padding-left: 50px" colspan="2">
+                            <button style="width: 150px;" onclick="Trier()" class="btn btn-sm btn-success">Appliquer le tri</button>
+                        </td>
+                    </tr>
+                </table>
             </div>
         }
     }
-</div>
 
-<div style="text-align: center" class="col-md-12">
-
-    @{
-        var total = OffreBean.GetTotalRows();
-        var count = total / 8.0;
-        var pageCount = (int)Math.Ceiling((decimal)count);   
-    }
-
-
-    <ul class="pagination">
-            
-        <li>
-            @Html.ActionLink("<< Précédent", "ObtenirListeLivresParPage", new { page = "<-1", pageActuel = pageActuel, pageTotal = pageCount })
-        </li>
-
+    <div id="affichageLivre">
         @{
-            if (Model.Count > 0)
+            foreach (var offre in Model)
             {
-                for (int p = 1; p < (pageCount + 1); p++)
-                {
-                    string page = p.ToString();
+                <div class="col-md-3 ajaxLink" style="text-align: center;padding-top: 20px;" title="@offre.NomLivre">
+                    <p>
+                        <img src="@offre.ImageLivre" style="width: 120px!important; height: 140px!important" alt="x" class="img-thumbnail" />
+                    </p>
+                    <h5 style=" color: red;height: 42px;font-weight: bold">@offre.NomLivre</h5>
+                    <h6><span style="font-weight: bold">Code ISBN 13: </span>@offre.CodeIsbn_13</h6>
+                    <div><span style="font-weight: bold">État: </span>@offre.EtatLivre</div>
+                    @using (Ajax.BeginForm("GetDetailsJson", new { noOffre = @offre.NoOffre },
+                        new AjaxOptions
+                        {
+                            OnSuccess = "DetailsOnSuccess",
+                            OnFailure = "DetailsOnFailure"
+                        }))
+                    {
+                        <p style="padding-top: 5px"><input class="btn btn-danger" value="Détails" type="submit" id="btnOffre_@offre.NoOffre" data-toggle="modal" /></p>
+                    }
+                </div>
+            }
+        }
 
-                    <li @if (@p == pageActuel) { <text> class="active" </text> }>
-                        @Html.ActionLink(page, "ObtenirListeLivresParPage", new { page = page, pageActuel = pageActuel, pageTotal = pageCount })
-                    </li>
+        <input type="hidden" id="pageActuel" value="@pageActuel" />
+        <input type="hidden" id="nomPage" value="Acceuil" />
 
-                }
+        <div id="pagination" style="text-align: center" class="col-md-12">
+
+            @{
+                var count = total / 8.0;
+                var pageCount = (int)Math.Ceiling((decimal)count);
             }
 
-        }
-        <li>
-            @Html.ActionLink("Suivant >>", "ObtenirListeLivresParPage", new { page = "+>1", pageActuel = pageActuel, pageTotal = pageCount })
-        </li>
-    </ul>
 
-</div>
+            <ul class="pagination">
 
-<input type="hidden" id="pageActuel" value="@pageActuel" />
+                <li>
+                    <a style="cursor: pointer" onclick="GererPagination('<-1')">&larr; Précédent</a>
+                </li>
 
-<div class="modal fade" id="detailsDialog" tabindex="-1">
-    <div class="modal-dialog modal-dialog modal-vertical-centered">
-        <div class="modal-content">
-            <div class="modal-header" style="background-color: #9a161a">
-                <a href="#" class="close" data-dismiss="modal">&times;</a>
-                <h4 style="color: white!important">Détails sur le livre <span id="headerDetails"></span></h4>
-            </div>
-            <div class="modal-body" style="height: 400px">
+                @{
+                    if (Model.Count > 0)
+                    {
+                        for (int p = 1; p < (pageCount + 1); p++)
+                        {
+                            string page = p.ToString();
 
-                <div> <div> <label style="font-weight: bold;width: 170px">Titre: </label><span id="nomLivre"></span></div></div>
-                <div> <div> <label style="font-weight: bold;width: 170px">Sous-titre: </label><span id="sousTitre"></span></div></div>
-                <div> <div> <label style="font-weight: bold;width: 170px">Code ISBN 10: </label><span id="codeIsbn10"></span></div></div>
-                <div> <div> <label style="font-weight: bold;width: 170px">Code ISBN 13: </label><span id="codeIsbn13"></span></div></div>
-                <div> <div> <label style="font-weight: bold;width: 170px">Cours obligatoire(s): </label><span id="coursOblig"></span></div></div>
-                <div> <div> <label style="font-weight: bold;width: 170px">Cours récommandé(s): </label><span id="coursRecom"></span></div></div>
-                <div> <div> <label style="font-weight: bold;width: 170px">Auteur: </label><span id="auteurLivre"></span></div></div>
-                <div> <div> <label style="font-weight: bold;width: 170px">État: </label><span id="etatLivre"></span></div></div>
-                <div> <div> <label style="font-weight: bold;width: 170px">Remarques: </label><span id="remLivre"></span></div></div>
+                            <li @if (@p == pageActuel) { <text> class="active" </text> }>
+                                <a style="cursor: pointer" onclick="GererPagination('@page')">@page</a>
+                            </li>
 
-                <fieldset style="margin-top: 40px">
-                    <legend>Information sur l'offrant</legend>
-                    <div> <div> <label style="font-weight: bold;width: 150px">Courriel: </label><span id="courrProprio"></span></div></div>
-                    <div> <div> <label style="font-weight: bold;width: 150px">Téléphone: </label><span id="telProprio"></span></div></div>
-                </fieldset>
+                        }
+                    }
 
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-danger btn-sm" data-dismiss="modal"> Fermer</button>
+                }
+                <li>
+                    <a style="cursor: pointer" onclick="GererPagination('+>1')">Suivant &rarr;</a>
+                </li>
+            </ul>
+
+        </div>
+
+    </div>
+
+
+    <div class="modal fade" id="detailsDialog" tabindex="-1">
+        <div class="modal-dialog modal-dialog modal-vertical-centered">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #9a161a">
+                    <a href="#" class="close" data-dismiss="modal">&times;</a>
+                    <h4 style="color: white!important">Détails sur le livre <span id="headerDetails"></span></h4>
+                </div>
+                <div class="modal-body" style="height: 400px">
+
+                    <div> <div> <label style="font-weight: bold;width: 170px">Titre: </label><span id="nomLivre"></span></div></div>
+                    <div> <div> <label style="font-weight: bold;width: 170px">Sous-titre: </label><span id="sousTitre"></span></div></div>
+                    <div> <div> <label style="font-weight: bold;width: 170px">Code ISBN 10: </label><span id="codeIsbn10"></span></div></div>
+                    <div> <div> <label style="font-weight: bold;width: 170px">Code ISBN 13: </label><span id="codeIsbn13"></span></div></div>
+                    <div> <div> <label style="font-weight: bold;width: 170px">Cours obligatoire(s): </label><span id="coursOblig"></span></div></div>
+                    <div> <div> <label style="font-weight: bold;width: 170px">Cours récommandé(s): </label><span id="coursRecom"></span></div></div>
+                    <div> <div> <label style="font-weight: bold;width: 170px">Auteur: </label><span id="auteurLivre"></span></div></div>
+                    <div> <div> <label style="font-weight: bold;width: 170px">État: </label><span id="etatLivre"></span></div></div>
+                    <div> <div> <label style="font-weight: bold;width: 170px">Remarques: </label><span id="remLivre"></span></div></div>
+
+                    <fieldset style="margin-top: 40px">
+                        <legend>Information sur l'offrant</legend>
+                        <div> <div> <label style="font-weight: bold;width: 150px">Courriel: </label><span id="courrProprio"></span></div></div>
+                        <div> <div> <label style="font-weight: bold;width: 150px">Téléphone: </label><span id="telProprio"></span></div></div>
+                    </fieldset>
+
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-danger btn-sm" data-dismiss="modal"> Fermer</button>
+                </div>
             </div>
         </div>
     </div>

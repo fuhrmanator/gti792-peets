@@ -23,7 +23,6 @@ namespace PEETS.Controllers
         public ActionResult Create(LivreBean livreModel)
         {
 
-
             if (livreModel != null)
             {                
                     SqlConnection cnn = null;
@@ -83,6 +82,7 @@ namespace PEETS.Controllers
                
             }
 
+            ViewBag.menuItemActive = "Livre";
             return View("/Views/Account/Manage.cshtml");
         }
 
