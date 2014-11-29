@@ -324,6 +324,7 @@
       <DependentUpon>Model1.edmx</DependentUpon>
       <LastGenOutput>Model1.cs</LastGenOutput>
     </Content>
+    <None Include="Properties\PublishProfiles\peets_deploy.pubxml" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -412,6 +413,7 @@
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\Manage.js" />
     <Content Include="Scripts\Site.js" />
+    <Content Include="Scripts\spin.min.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -444,7 +446,6 @@
     <Content Include="Views\Shared\_LoginPartial2.cshtml" />
     <Content Include="Views\Shared\_LinkOffre.cshtml" />
     <Content Include="Views\Offer\ManageOffer.cshtml" />
-    <Content Include="Views\Home\AffichageLivre.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Livre\" />

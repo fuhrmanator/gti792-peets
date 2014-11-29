@@ -16,29 +16,22 @@ namespace PEETS.Controllers
         public ActionResult Index()
         {
             ViewBag.PageActuel = 1;
+            ViewBag.menuItemActive = "Index";
             return View(ObtenirListeLivres());
         }
 
-        public ActionResult ObtenirListeLivresParPage(string page, int pageActuel, string titre, string isbn, string auteur, string sigle)
+        public ActionResult ObtenirListeLivresParPage(string pageDemande, int pageActuel, string titre, string isbn, string auteur, string sigle, string tri = "l.Nom", string ordre = "ASC")
         {
-            var pageTotal = OffreBean.GetTotalRows();
+            string recherche = construireRecherche(titre, isbn, auteur, sigle);
+            var pageTotal = OffreBean.GetTotalRows(recherche);
             var count = pageTotal / 8.0;
             var pageCount = (int)Math.Ceiling((decimal)count);
-            var newPageActuel = GererPage(page, pageActuel, pageCount);
+            var newPageActuel = GererPage(pageDemande, pageActuel, pageCount);
             int start = ((newPageActuel - 1) * 8) + 1;
             int last = start + 7;
             ViewBag.PageActuel = newPageActuel;
-            GererChampsRecherche();
-            return View("Index", ObtenirListeLivres(start, last));
-        }
-
-        private void GererChampsRecherche()
-        {
-            ViewBag.NomLivre = Request.Form["nom"];
-            ViewBag.ISBN = Request.Form["isbn"];
-            ViewBag.Auteur = Request.Form["auteur"];
-            ViewBag.Sigle = Request.Form["sigle"];
-
+            ViewBag.ReqRech = recherche;
+            return View("Index", ObtenirListeLivres(start, last, recherche,tri,ordre));
         }
 
         private int GererPage(string page, int pageActuel, int pageTotal)
@@ -82,16 +75,22 @@ namespace PEETS.Controllers
             return pageNumber;
         }
 
-        public List<OffreBean> ObtenirListeLivres(int start = 1, int last = 8, string reqRech = "")
+        public List<OffreBean> ObtenirListeLivres(int start = 1, int last = 8, string reqRech = "", string tri = "l.Nom", string ordre = "ASC")
         {
             List<OffreBean> offres = null;
             SqlConnection cnn = null;
             string connetionString = Properties.Settings.Default.dbConnectionString;
-            SqlCommand command = null;
-            string sql = "SELECT a.* FROM(";
+
+            if (string.IsNullOrEmpty(tri))
+            {
+                tri = "l.Nom";
+                ordre = "ASC";
+            }
+
+            var sql = "SELECT a.* FROM(";
             sql += "SELECT o.Id, e.DesctEtat, o.CoursOblig, o.CoursRecom, l.CodeISBN_10, " +
                    "l.CodeISBN_13, l.Nom, l.Image, o.Remarques, l.SousTitre, l.Auteur, o.IndActif, " +
-                   "ROW_NUMBER() OVER (ORDER BY  l.Nom ASC) AS ROWNUMBERS " +
+                   "ROW_NUMBER() OVER (ORDER BY " + tri + " " + ordre + " ) AS ROWNUMBERS " +
                          "FROM Offre o " +
                          "JOIN Livre l On o.IdLivre = l.Id " +
                          "JOIN Etat e ON o.Etat = e.CodeEtat " +
@@ -104,7 +103,7 @@ namespace PEETS.Controllers
             try
             {
                 cnn.Open();
-                command = new SqlCommand(sql, cnn);
+                var command = new SqlCommand(sql, cnn);
                 offres = new List<OffreBean>();
 
                 SqlDataReader dataReader = command.ExecuteReader();
@@ -138,17 +137,44 @@ namespace PEETS.Controllers
                 MessageBox.Show("Can not open connection ! ");
             }
 
+            if (offres != null && offres.Count > 0)
+            {
+                offres.First().OrdreItems.First(x => x.Value.Equals(ordre)).Selected = true;
+                offres.First().TriItems.First(x => x.Value.Equals(tri)).Selected = true;
+            }
             return offres;
         }
 
-        public ActionResult Rechercher(string titre, string isbn, string auteur, string sigle, int pageActuel)
+        public ActionResult Trier(string tri, string ordre, int pageActuel, string titre, string isbn, string auteur, string sigle)
         {
-            var totalRows = OffreBean.GetTotalRows();
+            string recherche = construireRecherche(titre, isbn, auteur, sigle);
+            var totalRows = OffreBean.GetTotalRows(recherche);
             var count = totalRows / 8.0;
             var pageCount = (int)Math.Ceiling((decimal)count);
             var newPageActuel = GererPage("", pageActuel, pageCount);
             int start = ((newPageActuel - 1) * 8) + 1;
             int last = start + 7;
+            ViewBag.PageActuel = newPageActuel;            
+            ViewBag.ReqRech = recherche;
+            return View("Index", ObtenirListeLivres(start, last, recherche, tri, ordre));
+        }
+        public ActionResult Rechercher(string titre, string isbn, string auteur, string sigle, int pageActuel, string tri, string ordre)
+        {
+            string recherche = construireRecherche(titre, isbn, auteur, sigle); 
+            var totalRows = OffreBean.GetTotalRows(recherche);
+            var count = totalRows / 8.0;
+            var pageCount = (int)Math.Ceiling((decimal)count);
+            var newPageActuel = GererPage("", pageActuel, pageCount);
+            int start = ((newPageActuel - 1) * 8) + 1;
+            int last = start + 7;                     
+            ViewBag.PageActuel = 1;
+            ViewBag.ReqRech = recherche;
+            return View("Index", ObtenirListeLivres(start, last, recherche, tri, ordre));
+             
+        }
+
+        private string construireRecherche(string titre, string isbn, string auteur, string sigle)
+        {
             string recherche = "";
 
             if (!string.IsNullOrEmpty(titre))
@@ -159,21 +185,18 @@ namespace PEETS.Controllers
             {
                 recherche += " And (l.CodeISBN_10 like '%" + isbn + "%' Or l.CodeISBN_13 like '%" + isbn + "%')";
             }
-           else if (!string.IsNullOrEmpty(sigle))
-           {
-               recherche += " And (o.CoursOblig like '%" + sigle + "%' Or o.CoursRecom like '%" + sigle + "%')";
-           }
+            else if (!string.IsNullOrEmpty(sigle))
+            {
+                recherche += " And (o.CoursOblig like '%" + sigle + "%' Or o.CoursRecom like '%" + sigle + "%')";
+            }
             else if (!string.IsNullOrEmpty(auteur))
-           {
-               recherche += " And l.Auteur like '%" + auteur + "%'";
-           }
+            {
+                recherche += " And l.Auteur like '%" + auteur + "%'";
+            }
 
-            GererChampsRecherche();
-            ViewBag.PageActuel = 1;
-
-            return View("AffichageLivre", ObtenirListeLivres(start, last, recherche));
-             
+            return recherche;
         }
+
         public ActionResult GetDetailsJson(int noOffre)
         {
             SqlConnection cnn = null;
@@ -232,14 +255,14 @@ namespace PEETS.Controllers
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";
-
+            ViewBag.menuItemActive = "About";
             return View();
         }
 
         public ActionResult Contact()
         {
             ViewBag.Message = "Your contact page.";
-
+            ViewBag.menuItemActive = "Contact";
             return View();
         }
     }

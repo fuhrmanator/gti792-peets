@@ -35,6 +35,7 @@ namespace PEETS.Controllers
         public ActionResult Login(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
+            ViewBag.menuItemActive = "Connecter";
             return View();
         }
 
@@ -59,6 +60,7 @@ namespace PEETS.Controllers
                 }
             }
 
+            ViewBag.menuItemActive = "Connecter";
             // Si nous sommes arrivés là, un échec s’est produit. Réafficher le formulaire
             return View(model);
         }
@@ -93,6 +95,7 @@ namespace PEETS.Controllers
                 }
             }
 
+            ViewBag.menuItemActive = "Compte";
             // Si nous sommes arrivés là, un échec s’est produit. Réafficher le formulaire
             return View(model);
         }
@@ -113,6 +116,7 @@ namespace PEETS.Controllers
             {
                 message = ManageMessageId.Error;
             }
+
             return RedirectToAction("LogOff", "Account");
         }
 
@@ -129,8 +133,7 @@ namespace PEETS.Controllers
             ViewBag.HasLocalPassword = HasPassword();
             ViewBag.ReturnUrl = Url.Action("Manage");
 
-
-
+            ViewBag.menuItemActive = "Compte";
             return View("Manage", GetUserProfil());
         }
 
@@ -219,6 +222,7 @@ namespace PEETS.Controllers
                 }
             }
 
+            ViewBag.menuItemActive = "Compte";
             // Si nous sommes arrivés là, un échec s’est produit. Réafficher le formulaire
             return View();
         }

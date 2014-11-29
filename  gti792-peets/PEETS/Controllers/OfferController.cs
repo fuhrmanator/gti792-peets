@@ -27,6 +27,7 @@ namespace PEETS.Controllers
         public ActionResult Index()
         {
             var offreModel = new OfferModel { Livre = new LivreModel { }, ListeOffresUtil = ObtenirListeOffresUtil() };
+            ViewBag.menuItemActive = "Offre";
             return View("ManageOffer", offreModel);
         }
 
@@ -120,7 +121,8 @@ namespace PEETS.Controllers
                     offre.ListeOffresUtil = ObtenirListeOffresUtil();
                     offre.Livre = new LivreModel {};
                 }
-               
+
+                ViewBag.menuItemActive = "Offre";
                 return View("ManageOffer", offre);
         }
 
@@ -380,6 +382,7 @@ namespace PEETS.Controllers
                 Message = message,
                 TypeMessage = type
             };
+            ViewBag.menuItemActive = "Offre";
             return View("ManageOffer", offre);
         }
 
@@ -410,6 +413,7 @@ namespace PEETS.Controllers
 
         public ActionResult ManageOffer()
         {
+            ViewBag.menuItemActive = "Offre";
             return View();
         }
      
