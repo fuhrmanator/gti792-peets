@@ -77,7 +77,7 @@ namespace PEETS.Models
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Can not open connection ! ");
+               // MessageBox.Show("Can not open connection ! ");
             }
 
             return raisons;

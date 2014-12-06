@@ -68,7 +68,7 @@ namespace PEETS.Controllers
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Can not open connection ! ");
+                
             }
 
             return offres;

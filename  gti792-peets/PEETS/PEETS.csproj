@@ -325,6 +325,7 @@
       <LastGenOutput>Model1.cs</LastGenOutput>
     </Content>
     <None Include="Properties\PublishProfiles\peets_deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\peets_deploy2.pubxml" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

@@ -91,17 +91,24 @@
                         </div>
 
                         <div>
-                            <label style="width: 180px">Sigle cours obligatoire(s)</label> @Html.TextBoxFor(m => m.CoursObligatoires, null, new { style = "width: 200px", placeholder = "Ex: MAT165, MAT472" })
+                            <label style="width: 180px">Obligatoire pour cours</label> @Html.TextBoxFor(m => m.CoursObligatoires, null, new { style = "width: 200px", placeholder = "Ex: MAT165, MAT472" })
                         </div>
 
                         <div>
-                            <label style="width: 180px">Sigle cours récommandé(s)</label> @Html.TextBoxFor(m => m.CoursReferences, null, new { style = "width: 200px", placeholder = "Ex: GIA400, ELE200" })
+                            <label style="width: 180px">Recommandé pour cours</label> @Html.TextBoxFor(m => m.CoursReferences, null, new { style = "width: 200px", placeholder = "Ex: GIA400, ELE200" })
                         </div>
 
                         <div>
-                            <label style="width: 180px">Remarques</label>
+                            <label style="width: 180px">Remarques**</label>
                             @Html.TextAreaFor(m => m.Remarques, htmlAttributes: new { style = "width: 300px;height: 80px" })
                             @Html.ValidationMessageFor(m => m.Remarques)
+                        </div>
+                        <div style="padding-top: 7px;color: orangered">
+                            <p>
+                                **Vous devez indiquez dans le champ remarques, si vous voulez échanger le livre ou le vendre.
+                                Si vous l'échangez, vous pouvez indiquer le livre contre lequel vous voulez l'échanger. Si vous le vendez, il faut indiquer le prix demandé.
+                                Nous encourageons les échanges de livres entre les étudiants.
+                            </p>
                         </div>
                     </div>
                     <div class="modal-footer">

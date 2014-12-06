@@ -77,7 +77,7 @@ namespace PEETS.Controllers
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show("Can not open connection ! ");
+                        
                     }
                
             }
@@ -104,7 +104,7 @@ namespace PEETS.Controllers
                 SqlDataReader dataReader = command.ExecuteReader();
                 while (dataReader.Read())
                 {
-                    MessageBox.Show(dataReader.GetValue(0) + " - " + dataReader.GetValue(1) + " - " + dataReader.GetValue(2));
+                   // MessageBox.Show(dataReader.GetValue(0) + " - " + dataReader.GetValue(1) + " - " + dataReader.GetValue(2));
                 }
 
                 dataReader.Close();      
@@ -113,7 +113,7 @@ namespace PEETS.Controllers
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Can not open connection ! ");
+               // MessageBox.Show("Can not open connection ! ");
             }
 
             return View("/Views/Home/Index.cshtml");
