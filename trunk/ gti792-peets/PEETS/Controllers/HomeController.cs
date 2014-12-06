@@ -134,7 +134,7 @@ namespace PEETS.Controllers
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Can not open connection ! ");
+                
             }
 
             if (offres != null && offres.Count > 0)

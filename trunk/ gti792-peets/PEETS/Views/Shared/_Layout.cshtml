@@ -24,13 +24,14 @@
     <div id="page">
         
         <header class="container">
-            <div id="menu" class="navbar navbar-default navbar-fixed-top">
-                <div class="navbar-header" style="padding-left: 20px;">
+            
+            <div id="menu" class="navbar navbar-default navbar-fixed-top">          
+                <div class="navbar-header" style="padding-left: 20px;">  
                     <button class="btn btn-success navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                         <span class="glyphicon glyphicon-chevron-down"></span>
                     </button>
                     <div id="logo">
-                        <h3>@Html.ActionLink("PÉETS", "Index", "Home", null, null)</h3>
+                        <h3>@Html.ActionLink("Plateforme d'échange d'articles scolaires", "Index", "Home", null, null)</h3>
                     </div>
                 </div>      
                 
@@ -56,6 +57,17 @@
         
         <section id="body" class="container">
             
+            <table>
+                <tr>
+                    <td>
+                        <label>Sponsorisé par: </label>
+                    </td>
+                    <td style="padding-left: 15px">
+                        <h5 style="font-weight: bold"><a target="_blank" href="http://www.etsmtl.ca/Services/dd/Engagement-de-l-ETS/Bureau-du-developpement-durable">Le bureau du développement durable de l'ÉTS</a></h5>
+                    </td>
+                </tr>
+            </table>
+
             <div class="row visible-md visible-lg">
                 <div class="col-md-12 col-lg-12">
                     @Html.Partial("_carousel")
@@ -64,12 +76,12 @@
             
             <hr/>
 
-            <section id="main" class="col-md-9 col-sm-10" style="border-right-style: outset;height: 800px;margin-top: 15px">
+            <section id="main" class="col-md-9 col-sm-10" style="border-right-style: outset;height: 830px;margin-top: 15px">
                 @RenderBody()
             </section>
 
 
-        <section id="sidebar" class="col-md-3 col-sm-2" style="background-color: #aa4200;height: 815px">
+        <section id="sidebar" class="col-md-3 col-sm-2" style="background-color: #aa4200;height: 845px">
             <div style="margin-top: 15px;text-align: center">
                 <div id="recherche" style="border-style: solid;border-color: #bf3e11;padding-bottom: 30px; display: none">
                     <h4 style="color: yellow">Recherche</h4>
@@ -92,9 +104,9 @@
             </div>
 
             <div style="border-style: solid;border-color: #bf3e11;padding-bottom: 30px;margin-top: 15px;height: 430px;padding-left: 10px;padding-right: 10px">
-                <h4 style="color: yellow;text-decoration:underline;text-align: center">Conseils sur l'envirronement</h4>           
+                <h4 style="color: yellow;text-decoration:underline;text-align: center">Le développement durable</h4>           
                 <p>
-                    <h5 style="font-weight: bold;text-align: center;color: greenyellow">Recyclage du papier: réduire, <span class="text-muted">réutiliser</span>, recycler: les trois R d'une meilleure gestion</h5>
+                    <h5 style="font-weight: bold;text-align: center;color: greenyellow">Recyclage du papier: réduire, réutiliser, recycler: les trois R d'une meilleure gestion</h5>
                 </p>
                 <p style="text-align: justify;color: yellow">
                     Pour arriver à un équilibre écologique dans l'univers du papier, il est important d'en réduire la consommation, de le réutiliser au maximum et de le recycler systématiquement. Le recyclage du papier est un acte simple, mais puissant, qui favorise le changement chez les personnes et dans les entreprises. À titre de citoyens, nous pouvons tous contribuer à changer les choses de multiples façons.
@@ -110,12 +122,34 @@
         </section>       
         
         <hr />
-        <footer class="container" style="text-align: center;color: orange;padding-right: 300px">
-            <p>&copy; @DateTime.Now.Year - PÉETS organisation</p>
+        <footer class="container" style="text-align: center;color: orange;padding-right: 300px;padding-top: -20px">
+            <div style="padding-bottom: 5px;"><a href="#polConfid" class="btn-link" data-toggle="modal">Politique de confidentialité</a></div>
+            <div>&copy; @DateTime.Now.Year - PÉETS organisation</div>
         </footer>
 
     </div>
     
+    <div class="modal fade" id="polConfid" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #9a161a">
+                    <a href="#" class="close" data-dismiss="modal">&times;</a>
+                    <h4 style="color: white!important">Comment vos renseignements personnels sont-ils utilisés?</h4>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        Vos renseignements personnels ne sont jamais partagés avec des tiers.
+                        Ils permettent de vous identifier et permettent à d'autres étudiants 
+                        d'entrer en contact avec vous quand vous publiez une offre.
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-danger btn-sm" data-dismiss="modal">Fermer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/modernizr")   

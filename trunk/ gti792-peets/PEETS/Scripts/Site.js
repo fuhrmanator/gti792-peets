@@ -60,6 +60,7 @@ function DetailsOnSuccess(data) {
         $("#auteurLivre").text(detail.Auteur);
         $("#remLivre").text(detail.Remarques);
         $("#etatLivre").text(detail.EtatLivre);
+        $("#courrProprio").attr("href", "mailto:" + detail.Email);
         $("#courrProprio").text(detail.Email);
         $("#telProprio").text(detail.Phone);
 

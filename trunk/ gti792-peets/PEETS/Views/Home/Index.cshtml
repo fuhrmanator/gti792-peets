@@ -19,11 +19,11 @@
 <div id="listeOffre">
     
     <div style="text-align: center">
-        <p style="color: orangered;font-weight: bolder">Échangé vos livres, c'est penser à l'avenir de la planète et penser à faire des économies!</p>
+        <p style="color: orangered;font-weight: bolder">Quand vous échangez vos livres, vous contribuez à protéger l'environnement et vous aidez vos camarades à faire des économies!</p>
     </div>
 
     <div id="labelNbLivre" style="padding-left: 40px;padding-top: 15px;padding-bottom: 15px">
-        <label>Nombre de livres trouvés: </label> <span style="font-weight: bold;padding-left: 10px">@total</span>
+        <label>Nombre de livres inscrits: </label> <span style="font-weight: bold;padding-left: 10px">@total</span>
     </div>
 
     @{  if (Model.Count > 4)
@@ -121,15 +121,15 @@
                     <div> <div> <label style="font-weight: bold;width: 170px">Sous-titre: </label><span id="sousTitre"></span></div></div>
                     <div> <div> <label style="font-weight: bold;width: 170px">Code ISBN 10: </label><span id="codeIsbn10"></span></div></div>
                     <div> <div> <label style="font-weight: bold;width: 170px">Code ISBN 13: </label><span id="codeIsbn13"></span></div></div>
-                    <div> <div> <label style="font-weight: bold;width: 170px">Cours obligatoire(s): </label><span id="coursOblig"></span></div></div>
-                    <div> <div> <label style="font-weight: bold;width: 170px">Cours récommandé(s): </label><span id="coursRecom"></span></div></div>
+                    <div> <div> <label style="font-weight: bold;width: 170px">"Obligatoire pour cours: </label><span id="coursOblig"></span></div></div>
+                    <div> <div> <label style="font-weight: bold;width: 170px">Recommandé pour cours: </label><span id="coursRecom"></span></div></div>
                     <div> <div> <label style="font-weight: bold;width: 170px">Auteur: </label><span id="auteurLivre"></span></div></div>
                     <div> <div> <label style="font-weight: bold;width: 170px">État: </label><span id="etatLivre"></span></div></div>
                     <div> <div> <label style="font-weight: bold;width: 170px">Remarques: </label><span id="remLivre"></span></div></div>
 
                     <fieldset style="margin-top: 40px">
                         <legend>Information sur l'offrant</legend>
-                        <div> <div> <label style="font-weight: bold;width: 150px">Courriel: </label><span id="courrProprio"></span></div></div>
+                        <div> <div> <label style="font-weight: bold;width: 150px">Courriel: </label><a id="courrProprio"></a></div></div>
                         <div> <div> <label style="font-weight: bold;width: 150px">Téléphone: </label><span id="telProprio"></span></div></div>
                     </fieldset>
 

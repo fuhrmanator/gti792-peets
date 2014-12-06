@@ -38,9 +38,9 @@ namespace PEETS.Models
             var cnn = new SqlConnection(connetionString);
             cnn.Open();
             string sql = "SELECT Count(o.Id) " +
-                               "FROM Offre o " +
+                               "FROM dbo.Offre o " +
                                "JOIN Livre l On o.IdLivre = l.Id " +
-                               "JOIN Etat e ON o.Etat = e.CodeEtat " +
+                               "JOIN dbo.Etat e ON o.Etat = e.CodeEtat " +
                                "Where o.IndActif = '1' " + recherch;
 
             var command = new SqlCommand(sql, cnn);
