@@ -39,7 +39,7 @@ namespace PEETS.Controllers
             var sql = "SELECT o.Id, l.Nom " +
                          "FROM Offre o " +
                          "JOIN Livre l On o.IdLivre = l.Id " +
-                         "Where o.userId = '" + User.Identity.GetUserId() + "' And o.IndActif='1'";
+                         "Where o.userId = '" + User.Identity.GetUserId() + "' And o.IndActif='1' order by o.Id desc";
 
             cnn = new SqlConnection(connetionString);
 
@@ -57,6 +57,7 @@ namespace PEETS.Controllers
                     {
                         NoOffre = (int)dataReader.GetValue(0),
                         NomLivre = dataReader.GetValue(1).ToString(),
+                        estNouv = false
                     };
 
                     offres.Add(offre);
@@ -80,13 +81,16 @@ namespace PEETS.Controllers
                 {
 
                     int? noLivre = TraiterLivre(offre.Livre);
+                    int? id = null;
 
                     if (noLivre != null)
-                    {
+                    {                      
                         offre.Livre.NoLivre = (int)noLivre;
   
                         var connetionString = Properties.Settings.Default.dbConnectionString;
-                        const string sql = "INSERT INTO Offre(IdLivre, Remarques, Etat, CoursOblig, CoursRecom, userId) VALUES(@IdLivre, @Remarques, @Etat, @CoursOblig, @CoursRecom, @userId)";          
+                        string sql = "INSERT INTO Offre(IdLivre, Remarques, Etat, CoursOblig, CoursRecom, userId) OUTPUT Inserted.ID " +
+                                           "VALUES(@IdLivre, @Remarques, @Etat, @CoursOblig, @CoursRecom, @userId) SET @id=SCOPE_IDENTITY()";
+
                         var cnn = new SqlConnection(connetionString);
 
                         try
@@ -98,12 +102,13 @@ namespace PEETS.Controllers
                             RemplirParametreOffre(command, offre);
 
                             command.ExecuteNonQuery();
+                            id = (int?)command.Parameters["@id"].Value;
                             command.Dispose();
                             cnn.Close();
 
                             //publishToFacebook();
 
-                            offre.Message = "L'offre a été créée avec succès.";
+                            offre.Message = "L'offre " + id + " a été créée avec succès.";
                             offre.TypeMessage = TypeMessage.Succes;
                         }
                         catch (Exception ex)
@@ -119,11 +124,89 @@ namespace PEETS.Controllers
                     }
 
                     offre.ListeOffresUtil = ObtenirListeOffresUtil();
+                    offre.ListeOffresUtil.First(x => x.NoOffre == id).estNouv = true;
                     offre.Livre = new LivreModel {};
                 }
 
                 ViewBag.menuItemActive = "Offre";
                 return View("ManageOffer", offre);
+        }
+
+        public ActionResult Modifier(String noOffre, String coursOblig, String coursRecom, String etat, String rem)
+        {
+            var connetionString = Properties.Settings.Default.dbConnectionString;
+            var sql = "Update Offre Set Remarques = '" + rem + "', CoursOblig = '" + coursOblig + "', CoursRecom = '" + coursRecom + "', Etat = '" + etat + "' Where Id = " + noOffre;
+            var cnn = new SqlConnection(connetionString);
+
+            try
+            {
+                cnn.Open();
+                var command = new SqlCommand(sql, cnn);
+                command.ExecuteNonQuery();
+                command.Dispose();
+                cnn.Close();
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return Json("", JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult GetDetailsJson(int noOffre)
+        {
+            SqlConnection cnn = null;
+            string connetionString = Properties.Settings.Default.dbConnectionString;
+            SqlCommand command = null;
+            OffreBean offre = null;
+            string sql = "SELECT o.Id, e.DesctEtat, o.CoursOblig, o.CoursRecom, l.CodeISBN_10, " +
+                         "l.CodeISBN_13, l.Nom, l.Image, o.Remarques, u.Email, u.PhoneNumber, l.Auteur " +
+                         "FROM Offre o " +
+                         "JOIN Livre l On o.IdLivre = l.Id " +
+                         "JOIN Etat e ON o.Etat = e.CodeEtat " +
+                         "JOIN AspNetUsers u On u.Id = o.userId " +
+                         "Where o.Id = " + noOffre;
+
+            cnn = new SqlConnection(connetionString);
+
+            try
+            {
+                cnn.Open();
+                command = new SqlCommand(sql, cnn);
+                var dataReader = command.ExecuteReader();
+
+                while (dataReader.Read())
+                {
+                    offre = new OffreBean
+                    {
+                        NoOffre = (int)dataReader.GetValue(0),
+                        EtatLivre = dataReader.GetValue(1).ToString(),
+                        CoursObligatoires = dataReader.GetValue(2).ToString(),
+                        CoursRecommandes = dataReader.GetValue(3).ToString(),
+                        CodeIsbn_10 = dataReader.GetValue(4).ToString(),
+                        CodeIsbn_13 = dataReader.GetValue(5).ToString(),
+                        NomLivre = dataReader.GetValue(6).ToString(),
+                        ImageLivre = dataReader.GetValue(7).ToString(),
+                        Remarques = dataReader.GetValue(8).ToString(),
+                        Email = dataReader.GetValue(9).ToString(),
+                        Phone = dataReader.GetValue(10).ToString(),
+                        Auteur = dataReader.GetValue(11).ToString()
+                    };
+
+                }
+
+                dataReader.Close();
+                command.Dispose();
+                cnn.Close();
+            }
+            catch (Exception ex)
+            {
+                offre = new OffreBean();
+                offre.Message = "Une erreur est survenue";
+            }
+
+            return Json(offre, JsonRequestBehavior.AllowGet);
         }
 
         private string Encoding(string texte)
@@ -142,6 +225,39 @@ namespace PEETS.Controllers
             texte = texte.Replace("Ã¢", "â");
             texte = texte.Replace("à¢", "â");
             return texte;
+        }
+
+        public ActionResult GetInfoLivreJson(String codeIsbn)
+        {
+            var url = "https://www.googleapis.com/books/v1/volumes?q=isbn:" + codeIsbn;
+            var webClient = new System.Net.WebClient();
+            var json = Encoding(webClient.DownloadString(url));
+
+            var gRresponse = JsonConvert.DeserializeObject<GoogleResponse>(json);
+            if (gRresponse.Items == null) return null;
+
+            var volumeInfo = gRresponse.Items[0].VolumeInfo;
+            if (volumeInfo == null) return null;
+
+            var livre = new LivreBean();
+            livre.NomLivre = volumeInfo.Title;
+
+            if (volumeInfo.Authors != null)
+            {
+                livre.Auteur = "";
+
+                foreach (var aut in volumeInfo.Authors.ToList())
+                {
+                    if (livre.Auteur != "")
+                    {
+                        livre.Auteur += " ; ";
+                    }
+
+                    livre.Auteur += aut;
+                }
+            }
+
+            return Json(livre, JsonRequestBehavior.AllowGet);
         }
 
         public int? TraiterLivre(LivreModel livre)
@@ -237,7 +353,7 @@ namespace PEETS.Controllers
                 {
                     if (auteur != "")
                     {
-                        auteur += " , ";
+                        auteur += " ; ";
                     }
                 
                     auteur += aut;
@@ -326,7 +442,9 @@ namespace PEETS.Controllers
             {
                 Value = User.Identity.GetUserId()
             };
-            command.Parameters.Add(paramUserId); 
+            command.Parameters.Add(paramUserId);
+
+            command.Parameters.Add("@id", SqlDbType.Int).Direction = ParameterDirection.Output; 
         }
 
         private void publishToFacebook()
@@ -366,12 +484,12 @@ namespace PEETS.Controllers
 
             if (UpdateOffre(offerModel))
             {
-                message = "L'offre a été fermé.";
+                message = "L'offre a été fermée.";
                 type = TypeMessage.Succes;
             }
             else
             {
-                message = "L'offre n'a pu être fermé.";
+                message = "L'offre n'a pu être fermée.";
                 type = TypeMessage.Erreur;
             }
 

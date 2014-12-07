@@ -14,7 +14,7 @@ namespace PEETS.Models
         public int NoOffre { get; set; }
 
         public string NomLivre { get; set; }
-
+        public Boolean estNouv { get; set; }
         public string CodeIsbn_10 { get; set; }
 
         public string ImageLivre { get; set; }

@@ -41,6 +41,36 @@
         $("#recherche").hide();
     }
 
+    $("#Livre_CodeIsbn").focusout(function () {
+
+        var codeIsbn = $("#Livre_CodeIsbn").val();
+
+        $("#titreLivre").text("");
+        $("#ateurLivre").text("");
+
+        if (codeIsbn.length >= 10) {
+
+            var codeIsbn2 = { codeIsbn: codeIsbn };
+            
+            $.ajax({
+                type: "POST",
+                url: "/Offer/GetInfoLivreJson",
+                data: codeIsbn2,
+                datatype: "html",
+                success: function (data) {
+                    var data2 = JSON.stringify(data);
+                    var detail = JSON.parse(data2);
+                    $("#titreLivre").text(detail.NomLivre);
+                    $("#ateurLivre").text(detail.Auteur);
+                },
+                error: function (resultat, statut, erreur) {
+                    alert(erreur);
+                }
+            });
+        }
+    });
+    
+
 });
 
 function DetailsOnSuccess(data) {
@@ -67,6 +97,50 @@ function DetailsOnSuccess(data) {
         $("#detailsDialog").modal();
     }
    
+}
+
+function ModifierOffre() {
+
+
+    var idOffre = $("#idOffre").text();
+    var coursObligModif = $("#coursObligModif").val();
+    var coursRecomModif = $("#coursRecomModif").val();
+    var selectedEtatVal = $('#SelectedEtatModif').val();
+    var remLivreModif = $("#remLivreModif").val();
+
+    var modifValues = { noOffre: idOffre, coursOblig: coursObligModif, coursRecom: coursRecomModif, etat: selectedEtatVal, rem: remLivreModif };
+
+    $.ajax({
+        type: "POST",
+        url: "/Offer/Modifier",
+        data: modifValues,
+        datatype: "html",
+        success: function (data) {
+            alert("L'offre " + idOffre + " a été modifiée avec succès.");
+            $("#modifDialog").modal('hide');
+        },
+        error: function (resultat, statut, erreur) {
+            alert(erreur);
+        }
+    });
+}
+
+function ModifOnSuccess(data) {
+
+    if (data != null) {
+
+        var data2 = JSON.stringify(data);
+        var detail = JSON.parse(data2);
+        $("#idOffre").text(detail.NoOffre);
+        $("#nomLivreModif").text(detail.NomLivre);
+        $("#coursObligModif").val(detail.CoursObligatoires);
+        $("#coursRecomModif").val(detail.CoursRecommandes);
+        $('#SelectedEtatModif option:selected').text(detail.EtatLivre);
+        $("#remLivreModif").val(detail.Remarques);
+        
+        $("#modifDialog").modal();
+    }
+
 }
 
 function DetailsOnFailure(data) {
