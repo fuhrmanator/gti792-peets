@@ -21,6 +21,7 @@ namespace PEETS.Models
         public string CoursObligatoires { get; set; }
         public string CoursReferences { get; set; }
         public string SelectedEtat { get; set; }
+        public string SelectedEtatModif { get; set; }
         public string SelectedRaison { get; set; }
 
         public IEnumerable<SelectListItem> Etats = new List<SelectListItem>

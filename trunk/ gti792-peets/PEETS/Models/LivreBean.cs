@@ -9,7 +9,7 @@ namespace PEETS.Models
     {
         public int NoLivre { get; set; }
         public String NomLivre { get; set; }
-
+        public string Auteur { get; set; }
         public string CodeIsbn { get; set; }
     }
 }
