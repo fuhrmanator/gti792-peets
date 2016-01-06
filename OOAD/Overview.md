@@ -16,3 +16,8 @@ Voici les cas d'utilisation considérés pour ce projet:
 
 ## S'authentifier
 
+# Modèle du domaine
+
+Voici le modèle du domaine pour le projet:
+
+![Modèle du domaine](http://www.plantuml.com/plantuml/proxy?fmt=gif&src=https://raw.githubusercontent.com/fuhrmanator/gti792-peets/master/OOAD/mdd.puml)
