@@ -1,0 +1,25 @@
+title Plateforme d'échange d'articles scolaires
+left to right direction
+skinparam style strictuml
+skinparam packageStyle rect
+actor Administrator
+actor Étudiant
+actor Modérateur
+rectangle "<<actor>>\nService\nd'authentification\n(Google)" as SA
+rectangle "Plateforme d'échange d'articles scolaires" {
+  Étudiant -- (Gérer compte)
+  (Gérer compte) -- SA
+  Étudiant -- (Rechercher article)
+  Étudiant -- (Consulter offre)
+  Étudiant -- (Modifier offre)
+  Étudiant -- (Fermer offre)
+  Modérateur -- (Fermer offre)
+  Modérateur -- (Modifier offre)
+  Étudiant -- (Authentifier utilisateur)
+(Authentifier utilisateur) -- SA
+  Administrator -- (Fermer offre)
+  Administrator -- (Modifier offre)
+Étudiant -- (Rechercher article)
+Modérateur -- (Rechercher article)
+Administrator -- (Rechercher article)
+}
