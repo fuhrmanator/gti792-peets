@@ -6,20 +6,17 @@ actor Administrator
 actor Étudiant
 actor Modérateur
 rectangle "<<actor>>\nService\nd'authentification\n(Google)" as SA
-rectangle "Plateforme d'échange d'articles scolaires" {
+rectangle "Plateforme d'échange\nd'articles scolaires (PÉÉTS)" {
   Étudiant -- (Gérer compte)
   (Gérer compte) -- SA
+  Étudiant -- (Gérer offres)
   Étudiant -- (Rechercher article)
   Étudiant -- (Consulter offre)
-  Étudiant -- (Modifier offre)
-  Étudiant -- (Fermer offre)
-  Modérateur -- (Fermer offre)
-  Modérateur -- (Modifier offre)
-  Étudiant -- (Authentifier utilisateur)
-(Authentifier utilisateur) -- SA
-  Administrator -- (Fermer offre)
-  Administrator -- (Modifier offre)
-Étudiant -- (Rechercher article)
-Modérateur -- (Rechercher article)
-Administrator -- (Rechercher article)
+  Administrator -- (Gérer offres)
 }
+note as N1
+ En utilisant les comptes Google, 
+ la gestion de comptes est plus
+ facile à implémenter
+end note
+SA . N1
