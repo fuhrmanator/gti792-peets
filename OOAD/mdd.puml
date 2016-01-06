@@ -1,0 +1,50 @@
+@startuml
+skinparam style strictuml
+hide methods
+hide empty members
+title Modèle du domaine \n(Plateforme d’échange d’articles scolaires)
+class Personne {
+  nom
+  prenom
+}
+
+class  "Etudiant"  as E
+class E {
+  codeUniverselETS
+}
+
+class "Administrateur " as A 
+class A {
+  niveau
+}
+
+class Compte {
+  dateDebut
+  dateFin
+}
+
+class Article {
+  nom
+  code
+ image
+ prix
+type
+}
+
+Class Offre{
+ dateDébut
+ dateFin
+ listeBid
+ remarques
+}
+
+
+A .up.|> Personne
+E .up.|> Personne
+Personne"1" - "1" Compte: possède >
+E"1" - "0..*" Offre: crée >
+E"0..*" - "1..*" Offre: Misé >
+E"0..*" - "1..*" Article: Rechercher >
+Offre"1" - "1" Article : Contient >
+A"1..*" - "0..*" Offre : Modifier­ >
+@enduml
