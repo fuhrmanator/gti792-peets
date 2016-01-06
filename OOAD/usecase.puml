@@ -1,3 +1,4 @@
+@startuml
 title Plateforme d'échange d'articles scolaires
 left to right direction
 skinparam style strictuml
@@ -20,3 +21,4 @@ note as N1
  facile à implémenter
 end note
 SA . N1
+@enduml
