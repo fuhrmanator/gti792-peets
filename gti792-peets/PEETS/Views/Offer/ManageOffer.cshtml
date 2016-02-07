@@ -1,4 +1,4 @@
-﻿@using ComputerBeacon.Facebook.Fql
+@using ComputerBeacon.Facebook.Fql
 @using PEETS.Enums
 @using PEETS.Models;
 @using Microsoft.AspNet.Identity;
@@ -54,6 +54,7 @@
                                 <th>No offre</th>
                                 <th>Livre</th>
                                 <th>Détails</th>
+                                <th>Modifier l'offre</th>
                                 <th>Fermer l'offre</th>
                             </tr>
                         </thead>
@@ -146,6 +147,10 @@
                         </div>
 
                         <div>
+                            <label style="width: 180px">Prix</label> @Html.TextBoxFor(m => m.Prix, null, new { style = "width: 200px" })
+                        </div>
+
+                        <div>
                             <label style="width: 180px">Remarques**</label>
                             @Html.TextAreaFor(m => m.Remarques, htmlAttributes: new { style = "width: 300px;height: 80px" })
                             @Html.ValidationMessageFor(m => m.Remarques)
@@ -186,6 +191,7 @@
                 <div> <div> <label style="font-weight: bold;width: 190px">Recommandé pour cours: </label><span id="coursRecom"></span></div></div>
                 <div> <div> <label style="font-weight: bold;width: 190px">Auteur(s): </label><span id="auteurLivre"></span></div></div>
                 <div> <div> <label style="font-weight: bold;width: 190px">État: </label><span id="etatLivre"></span></div></div>
+                <div> <div> <label style="font-weight: bold;width: 190px">Prix: </label><span id="prixLivre"></span><label style="font-weight: bold;">$ </label></div></div>
                 <div> <div> <label style="font-weight: bold;width: 190px">Remarques: </label><span id="remLivre"></span></div></div>
 
                 <fieldset style="margin-top: 40px">
@@ -214,6 +220,7 @@
                     <div> <div> <label style="font-weight: bold;width: 190px">Titre: </label><span id="nomLivreModif"></span></div></div>
                     <div> <div> <label style="font-weight: bold;width: 190px">Obligatoire pour cours: </label><input id="coursObligModif"></div></div>
                     <div> <div> <label style="font-weight: bold;width: 190px">Recommandé pour cours: </label><input id="coursRecomModif"></div></div>
+                    <div> <div> <label style="font-weight: bold;width: 190px">Prix: </label><input id="prixModif"></div></div>
                     <div>
                         <label style="font-weight: bold;width: 187px">État</label> @Html.DropDownListFor(m => m.SelectedEtatModif, Model.Etats, new { style = "width: 218px" })
                     </div>               
