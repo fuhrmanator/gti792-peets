@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -88,8 +88,8 @@ namespace PEETS.Controllers
                         offre.Livre.NoLivre = (int)noLivre;
   
                         var connetionString = Properties.Settings.Default.dbConnectionString;
-                        string sql = "INSERT INTO Offre(IdLivre, Remarques, Etat, CoursOblig, CoursRecom, userId) OUTPUT Inserted.ID " +
-                                           "VALUES(@IdLivre, @Remarques, @Etat, @CoursOblig, @CoursRecom, @userId) SET @id=SCOPE_IDENTITY()";
+                        string sql = "INSERT INTO Offre(IdLivre, Remarques, Etat, CoursOblig, CoursRecom, userId, Prix) OUTPUT Inserted.ID " +
+                                           "VALUES(@IdLivre, @Remarques, @Etat, @CoursOblig, @CoursRecom, @userId, @Prix) SET @id=SCOPE_IDENTITY()";
 
                         var cnn = new SqlConnection(connetionString);
 
@@ -132,10 +132,10 @@ namespace PEETS.Controllers
                 return View("ManageOffer", offre);
         }
 
-        public ActionResult Modifier(String noOffre, String coursOblig, String coursRecom, String etat, String rem)
+        public ActionResult Modifier(String noOffre, String coursOblig, String coursRecom, String etat, String rem, Double prix)
         {
             var connetionString = Properties.Settings.Default.dbConnectionString;
-            var sql = "Update Offre Set Remarques = '" + rem + "', CoursOblig = '" + coursOblig + "', CoursRecom = '" + coursRecom + "', Etat = '" + etat + "' Where Id = " + noOffre;
+            var sql = "Update Offre Set Remarques = '" + rem + "', CoursOblig = '" + coursOblig + "', CoursRecom = '" + coursRecom + "',Prix = " + prix.ToString() + ", Etat = '" + etat + "' Where Id = " + noOffre;
             var cnn = new SqlConnection(connetionString);
 
             try
@@ -161,7 +161,7 @@ namespace PEETS.Controllers
             SqlCommand command = null;
             OffreBean offre = null;
             string sql = "SELECT o.Id, e.DesctEtat, o.CoursOblig, o.CoursRecom, l.CodeISBN_10, " +
-                         "l.CodeISBN_13, l.Nom, l.Image, o.Remarques, u.Email, u.PhoneNumber, l.Auteur " +
+                         "l.CodeISBN_13, l.Nom, l.Image, o.Remarques, u.Email, u.PhoneNumber, l.Auteur, o.Prix " +
                          "FROM Offre o " +
                          "JOIN Livre l On o.IdLivre = l.Id " +
                          "JOIN Etat e ON o.Etat = e.CodeEtat " +
@@ -191,7 +191,8 @@ namespace PEETS.Controllers
                         Remarques = dataReader.GetValue(8).ToString(),
                         Email = dataReader.GetValue(9).ToString(),
                         Phone = dataReader.GetValue(10).ToString(),
-                        Auteur = dataReader.GetValue(11).ToString()
+                        Auteur = dataReader.GetValue(11).ToString(),
+                        Prix = Convert.ToDouble(dataReader.GetValue(12).ToString())
                     };
 
                 }
@@ -443,6 +444,12 @@ namespace PEETS.Controllers
                 Value = User.Identity.GetUserId()
             };
             command.Parameters.Add(paramUserId);
+
+            var paramPrix = new SqlParameter("@Prix", SqlDbType.Float)
+            {
+                Value = offre.Prix
+            };
+            command.Parameters.Add(paramPrix);
 
             command.Parameters.Add("@id", SqlDbType.Int).Direction = ParameterDirection.Output; 
         }

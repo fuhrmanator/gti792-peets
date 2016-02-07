@@ -1,4 +1,4 @@
-﻿@using PEETS.Models;
+@using PEETS.Models;
 @model List<OffreBean>
 @{
     ViewBag.Title = "Acceuil";
@@ -53,6 +53,7 @@
                     <h5 style=" color: red;height: 42px;font-weight: bold">@offre.NomLivre</h5>
                     <h6><span style="font-weight: bold">Code ISBN 13: </span>@offre.CodeIsbn_13</h6>
                     <div><span style="font-weight: bold">État: </span>@offre.EtatLivre</div>
+                    <div><span style="font-weight: bold">Prix: </span>@offre.Prix</div>
                     @using (Ajax.BeginForm("GetDetailsJson", new { noOffre = @offre.NoOffre },
                         new AjaxOptions
                         {
@@ -125,6 +126,7 @@
                     <div> <div> <label style="font-weight: bold;width: 190px">Recommandé pour cours: </label><span id="coursRecom"></span></div></div>
                     <div> <div> <label style="font-weight: bold;width: 190px">Auteur(s): </label><span id="auteurLivre"></span></div></div>
                     <div> <div> <label style="font-weight: bold;width: 190px">État: </label><span id="etatLivre"></span></div></div>
+                    <div> <div> <label style="font-weight: bold;width: 190px">Prix: </label><span id="prixLivre"></span><label style="font-weight: bold;">$ </label></div></div>
                     <div> <div> <label style="font-weight: bold;width: 190px">Remarques: </label><span id="remLivre"></span></div></div>
 
                     <fieldset style="margin-top: 40px">

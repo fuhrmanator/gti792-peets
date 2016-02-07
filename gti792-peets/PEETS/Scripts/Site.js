@@ -1,4 +1,4 @@
-﻿$(function () {
+$(function () {
    
     $("#Livre_CodeIsbn").autocomplete({
         source: function (request, response) {
@@ -88,6 +88,7 @@ function DetailsOnSuccess(data) {
         $("#coursOblig").text(detail.CoursObligatoires);
         $("#coursRecom").text(detail.CoursRecommandes);
         $("#auteurLivre").text(detail.Auteur);
+        $("#prixLivre").text(detail.Prix);
         $("#remLivre").text(detail.Remarques);
         $("#etatLivre").text(detail.EtatLivre);
         $("#courrProprio").attr("href", "mailto:" + detail.Email);
@@ -107,8 +108,9 @@ function ModifierOffre() {
     var coursRecomModif = $("#coursRecomModif").val();
     var selectedEtatVal = $('#SelectedEtatModif').val();
     var remLivreModif = $("#remLivreModif").val();
+    var prixModif = $("#prixModif").val();
 
-    var modifValues = { noOffre: idOffre, coursOblig: coursObligModif, coursRecom: coursRecomModif, etat: selectedEtatVal, rem: remLivreModif };
+    var modifValues = { noOffre: idOffre, coursOblig: coursObligModif, coursRecom: coursRecomModif, etat: selectedEtatVal, rem: remLivreModif, prix: prixModif };
 
     $.ajax({
         type: "POST",
@@ -135,6 +137,7 @@ function ModifOnSuccess(data) {
         $("#nomLivreModif").text(detail.NomLivre);
         $("#coursObligModif").val(detail.CoursObligatoires);
         $("#coursRecomModif").val(detail.CoursRecommandes);
+        $("#prixModif").val(detail.Prix);
         $('#SelectedEtatModif option:selected').text(detail.EtatLivre);
         $("#remLivreModif").val(detail.Remarques);
         
