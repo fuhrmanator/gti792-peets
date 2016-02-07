@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
@@ -30,6 +30,7 @@ namespace PEETS.Models
         public string Auteur { get; set; }
         public string SousTitre { get; set; }
         public bool Statut { get; set; }
+        public double Prix { get; set; }
         public static int GetTotalRows(string recherch)
         {
             var totalRows = 0;
