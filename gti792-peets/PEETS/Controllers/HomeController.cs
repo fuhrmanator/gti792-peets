@@ -89,7 +89,7 @@ namespace PEETS.Controllers
 
             var sql = "SELECT a.* FROM(";
             sql += "SELECT o.Id, e.DesctEtat, o.CoursOblig, o.CoursRecom, l.CodeISBN_10, " +
-                   "l.CodeISBN_13, l.Nom, l.Image, o.Remarques, l.SousTitre, l.Auteur, o.IndActif, " +
+                   "l.CodeISBN_13, l.Nom, l.Image, o.Remarques, l.SousTitre, l.Auteur,o.Prix, o.IndActif, " +
                    "ROW_NUMBER() OVER (ORDER BY " + tri + " " + ordre + " ) AS ROWNUMBERS " +
                          "FROM Offre o " +
                          "JOIN Livre l On o.IdLivre = l.Id " +
@@ -122,7 +122,8 @@ namespace PEETS.Controllers
                         ImageLivre = dataReader.GetValue(7).ToString() != "" ? dataReader.GetValue(7).ToString() : "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcR7lSOcD29L4UQ8vuBd3rj1CREOKYOxCQE1Qrf8rAJmC500pR_9dA",
                         Remarques = dataReader.GetValue(8).ToString(),
                         SousTitre = dataReader.GetValue(9).ToString(),
-                        Auteur = dataReader.GetValue(10).ToString()
+                        Auteur = dataReader.GetValue(10).ToString(),
+                        Prix = Convert.ToDouble(dataReader.GetValue(11).ToString())
                     };                   
 
                     offres.Add(offre);
@@ -204,7 +205,7 @@ namespace PEETS.Controllers
             SqlCommand command = null;
             OffreBean offre = null;
             string sql = "SELECT o.Id, e.DesctEtat, o.CoursOblig, o.CoursRecom, l.CodeISBN_10, " +
-                         "l.CodeISBN_13, l.Nom, l.Image, o.Remarques, u.Email, u.PhoneNumber, l.Auteur " +
+                         "l.CodeISBN_13, l.Nom, l.Image, o.Remarques, u.Email, u.PhoneNumber, l.Auteur, o.Prix " +
                          "FROM Offre o " +
                          "JOIN Livre l On o.IdLivre = l.Id " +
                          "JOIN Etat e ON o.Etat = e.CodeEtat " +
@@ -234,7 +235,8 @@ namespace PEETS.Controllers
                         Remarques = dataReader.GetValue(8).ToString(),
                         Email = dataReader.GetValue(9).ToString(),
                         Phone = dataReader.GetValue(10).ToString(),
-                        Auteur = dataReader.GetValue(11).ToString()
+                        Auteur = dataReader.GetValue(11).ToString(),
+                        Prix = Convert.ToDouble(dataReader.GetValue(12).ToString())
                     };
 
                 }
