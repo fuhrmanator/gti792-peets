@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data.SqlClient;
@@ -91,6 +91,8 @@ namespace PEETS.Models
         public TypeMessage TypeMessage { get; set; }
 
         public List<OffreBean> ListeOffresUtil { get; set; }
+
+        public Double Prix { get; set; }
     }
 
 }
