@@ -26,6 +26,23 @@ class Article {
   image : Image
 }
 
+class Livre {
+  nom : String
+  codeISBN : ISBN
+  image : Image
+}
+class NotesDeCours {
+  nom : String
+  dateEdition : String
+  image : Image
+}
+class Calculatrice {
+  modele : String
+  OS : String
+  image : Image
+}
+
+
 Class Offre{
   dateDébut
   dateFin
@@ -36,6 +53,9 @@ Class Offre{
 
 A .up.|> Utilisateur
 E .up.|> Utilisateur
+Livre .up.|> Article
+NotesDeCours .up.|> Article
+Calculatrice .up.|> Article
 Utilisateur "1" - "1" Compte: s'authentifie-par >
 
 E "1" -- "1..*" Offre: crée >
