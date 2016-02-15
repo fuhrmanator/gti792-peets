@@ -1,0 +1,145 @@
+@using PEETS.Models;
+@model List<OffreBean>
+@{
+    ViewBag.Title = "Acceuil";
+    int pageActuel = ViewBag.PageActuel;
+    string rech = ViewBag.ReqRech;
+    var total = OffreBean.GetTotalRows(rech);
+}
+
+<style>
+    fieldset {
+        margin-left: 1px;
+        margin-right: 1px;
+        padding-left: 20px;
+        padding-right: 0.75em;
+        border: 1px groove;
+    }
+</style>
+<div id="listeOffre">
+    
+    <div style="text-align: center">
+        <p style="color: orangered;font-weight: bolder">Quand vous échangez vos livres, vous contribuez à protéger l'environnement et vous aidez vos camarades à faire des économies!</p>
+    </div>
+
+    <div id="labelNbLivre" style="padding-left: 40px;padding-top: 15px;padding-bottom: 15px">
+        <label>Nombre de livres répertoriés: </label> <span style="font-weight: bold;padding-left: 10px">@total</span>
+    </div>
+
+    @{  if (Model.Count > 4)
+        {
+            <div style="padding-top: 10px;text-align: center">
+                <table>
+                    <tr>
+                        <td><label style="width: 180px">Trier par: </label> @Html.DropDownListFor(m => m.First().SelectedTriItem, Model.First().TriItems, new { style = "width: 100px" })</td>
+                        <td><label style="width: 180px">Ordre: </label> @Html.DropDownListFor(m => m.First().SelectedOrdreItem, Model.First().OrdreItems, new { style = "width: 100px" })</td>
+                        <td style="padding-left: 50px" colspan="2">
+                            <button style="width: 150px;" onclick="Trier()" class="btn btn-sm btn-success">Appliquer le tri</button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        }
+    }
+
+    <div id="affichageLivre">
+        @{
+            foreach (var offre in Model)
+            {
+                <div class="col-md-3 ajaxLink" style="text-align: center;padding-top: 20px;" title="@offre.NomLivre">
+                    <p>
+                        <img src="@offre.ImageLivre" style="width: 120px!important; height: 140px!important" alt="x" class="img-thumbnail" />
+                    </p>
+                    <h5 style=" color: red;height: 42px;font-weight: bold">@offre.NomLivre</h5>
+                    <h6><span style="font-weight: bold">Code ISBN 13: </span>@offre.CodeIsbn_13</h6>
+                    <div><span style="font-weight: bold">État: </span>@offre.EtatLivre</div>
+                    <div><span style="font-weight: bold">Prix: </span>@offre.Prix</div>
+                    @using (Ajax.BeginForm("GetDetailsJson", new { noOffre = @offre.NoOffre },
+                        new AjaxOptions
+                        {
+                            OnSuccess = "DetailsOnSuccess",
+                            OnFailure = "DetailsOnFailure"
+                        }))
+                    {
+                        <p style="padding-top: 5px"><input class="btn btn-danger" value="Détails" type="submit" id="btnOffre_@offre.NoOffre" data-toggle="modal" /></p>
+                    }
+                </div>
+            }
+        }
+
+        <input type="hidden" id="pageActuel" value="@pageActuel" />
+        <input type="hidden" id="nomPage" value="Acceuil" />
+
+        <div id="pagination" style="text-align: center" class="col-md-12">
+
+            @{
+                var count = total / 8.0;
+                var pageCount = (int)Math.Ceiling((decimal)count);
+            }
+
+
+            <ul class="pagination">
+
+                <li>
+                    <a style="cursor: pointer" onclick="GererPagination('<-1')">&larr; Précédent</a>
+                </li>
+
+                @{
+                    if (Model.Count > 0)
+                    {
+                        for (int p = 1; p < (pageCount + 1); p++)
+                        {
+                            string page = p.ToString();
+
+                            <li @if (@p == pageActuel) { <text> class="active" </text> }>
+                                <a style="cursor: pointer" onclick="GererPagination('@page')">@page</a>
+                            </li>
+
+                        }
+                    }
+
+                }
+                <li>
+                    <a style="cursor: pointer" onclick="GererPagination('+>1')">Suivant &rarr;</a>
+                </li>
+            </ul>
+
+        </div>
+
+    </div>
+
+
+    <div class="modal fade" id="detailsDialog" tabindex="-1">
+        <div class="modal-dialog modal-dialog modal-vertical-centered">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #9a161a">
+                    <a href="#" class="close" data-dismiss="modal">&times;</a>
+                    <h4 style="color: white!important">Détails sur le livre <span id="headerDetails"></span></h4>
+                </div>
+                <div class="modal-body" style="height: 400px">
+
+                    <div> <div> <label style="font-weight: bold;width: 190px">Titre: </label><span id="nomLivre"></span></div></div>
+                    <div> <div> <label style="font-weight: bold;width: 190px">Sous-titre: </label><span id="sousTitre"></span></div></div>
+                    <div> <div> <label style="font-weight: bold;width: 190px">Code ISBN 10: </label><span id="codeIsbn10"></span></div></div>
+                    <div> <div> <label style="font-weight: bold;width: 190px">Code ISBN 13: </label><span id="codeIsbn13"></span></div></div>
+                    <div> <div> <label style="font-weight: bold;width: 190px">Obligatoire pour cours: </label><span id="coursOblig"></span></div></div>
+                    <div> <div> <label style="font-weight: bold;width: 190px">Recommandé pour cours: </label><span id="coursRecom"></span></div></div>
+                    <div> <div> <label style="font-weight: bold;width: 190px">Auteur(s): </label><span id="auteurLivre"></span></div></div>
+                    <div> <div> <label style="font-weight: bold;width: 190px">État: </label><span id="etatLivre"></span></div></div>
+                    <div> <div> <label style="font-weight: bold;width: 190px">Prix: </label><span id="prixLivre"></span><label style="font-weight: bold;">$ </label></div></div>
+                    <div> <div> <label style="font-weight: bold;width: 190px">Remarques: </label><span id="remLivre"></span></div></div>
+
+                    <fieldset style="margin-top: 40px">
+                        <legend>Information sur l'offrant</legend>
+                        <div> <div> <label style="font-weight: bold;width: 170px">Courriel: </label><a id="courrProprio"></a></div></div>
+                        <div> <div> <label style="font-weight: bold;width: 170px">Téléphone: </label><span id="telProprio"></span></div></div>
+                    </fieldset>
+
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-danger btn-sm" data-dismiss="modal"> Fermer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
