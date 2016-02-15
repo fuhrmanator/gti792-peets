@@ -13,7 +13,10 @@ rectangle "Plateforme d'échange\nd'articles scolaires (PÉÉTS)" {
   Étudiant -- (Gérer offres)
   Étudiant -- (Rechercher article)
   Étudiant -- (Consulter offre)
+  Étudiant -- (Envoyer un message à propos d'une offre)
   Administrator -- (Gérer offres)
+  Administrator -- (Imprimer une étiquette)
+  Administrator -- (Envoyer un message à propos d'une offre)
 }
 note as N1
  En utilisant les comptes Google, 
