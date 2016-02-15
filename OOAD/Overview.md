@@ -16,6 +16,10 @@ Voici les cas d'utilisation considérés pour ce projet:
 
 ## S'authentifier
 
+## Imprimer une étiquette
+
+## Envoyer un message à propos d'une offre
+
 # Modèle du domaine
 
 Voici le modèle du domaine pour le projet:
