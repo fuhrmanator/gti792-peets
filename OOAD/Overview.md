@@ -6,7 +6,15 @@ Voici les cas d'utilisation considérés pour ce projet:
 
 ![Diagramme de cas d'utilisation](http://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/fuhrmanator/gti792-peets/master/OOAD/usecase.puml&0)
 
-## Gérer offre
+## Ajouter une offre pour un livre
+
+## Ajouter une offre pour des notes de cours
+
+## Ajouter une offre pour une calculatrice
+
+## Modifier une offre
+
+## Fermer une offre
 
 ## Rechercher article
 
