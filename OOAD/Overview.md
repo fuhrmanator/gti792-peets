@@ -20,4 +20,4 @@ Voici les cas d'utilisation considérés pour ce projet:
 
 Voici le modèle du domaine pour le projet:
 
-![Modèle du domaine](http://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/fuhrmanator/gti792-peets/master/OOAD/mdd.puml)
+![Modèle du domaine](http://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/fuhrmanator/gti792-peets/master/OOAD/mdd.puml&0)
