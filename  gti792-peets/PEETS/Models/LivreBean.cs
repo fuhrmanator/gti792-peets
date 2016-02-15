@@ -11,5 +11,6 @@ namespace PEETS.Models
         public String NomLivre { get; set; }
         public string Auteur { get; set; }
         public string CodeIsbn { get; set; }
+        public int AnneeEdition { get; set; }
     }
 }
