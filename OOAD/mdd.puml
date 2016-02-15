@@ -22,32 +22,25 @@ class "Compte\nGoogle" as Compte {
 
 class Article {
   nom : String
-  codeISBN : ISBN
-  image : Image
 }
 
 class Livre {
-  nom : String
   codeISBN : ISBN
-  image : Image
+  /imageCouverture : Image
 }
 class NotesDeCours {
-  nom : String
   dateEdition : String
-  image : Image
 }
 class Calculatrice {
   modele : String
   OS : String
-  image : Image
 }
 
 
-Class Offre{
+class Offre{
   dateDébut
-  dateFin
+  prix
   condition : Condition
-  image : Image
 }
 
 
@@ -61,6 +54,6 @@ Utilisateur "1" - "1" Compte: s'authentifie-par >
 E "1" -- "1..*" Offre: crée >
 'E "0..*" - "1..*" Offre: Misé >
 'E "0..*" - "1..*" Article: recherche >
-Offre "1" - "1" Article : propose >
-A "1..*" - "0..*" Offre : modifie­ >
+Offre "*" - "1" Article : propose >
+A "1..*" - "0..*" Offre : modifie >
 @enduml
