@@ -29,6 +29,7 @@ class Livre {
   /imageCouverture : Image
 }
 class NotesDeCours {
+  codeBarre : String
   dateEdition : String
 }
 class Calculatrice {
