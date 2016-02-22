@@ -29,12 +29,12 @@ class Livre {
   /imageCouverture : Image
 }
 class NotesDeCours {
+  sousTitre : String
   codeBarre : String
   dateEdition : String
 }
 class Calculatrice {
   modele : String
-  OS : String
 }
 
 
