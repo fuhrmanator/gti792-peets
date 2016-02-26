@@ -47,7 +47,7 @@
         <div class="row">
             <div class="col-md-10">
                 <div class="table-responsive">
-                    <h3 style="color: red">Liste de vos offres actives</h3>
+                    <h3 style="color: red">Liste de vos offres actives pour les livres</h3>
                     <table class="table table-striped table-bordered table-hover table-condensed">
                         <thead style="font-weight: bold;text-align: center">
                             <tr>
@@ -105,12 +105,179 @@
                         }
                     </table>
                 </div>
+
+                <div class="table-responsive">
+                    <h3 style="color: red">Liste de vos offres actives pour les notes de cours</h3>
+                    <table class="table table-striped table-bordered table-hover table-condensed">
+                        <thead style="font-weight: bold;text-align: center">
+                            <tr>
+                                <th>No offre</th>
+                                <th>Notes de cours</th>
+                                <th>Détails</th>
+                                <th>Modifier l'offre</th>
+                                <th>Fermer l'offre</th>
+                            </tr>
+                        </thead>
+                        @foreach (var offre in @Model.ListeOffresUtilNotesCours)
+                        {
+                            <tr>
+                                <td style="text-align: center">
+                                    @offre.NoOffre
+                                </td>
+                                <td>@offre.NomLivre</td>
+                                <td style="text-align: center">
+                                    @using (Ajax.BeginForm("GetDetailsJsonNotes", new { noOffre = @offre.NoOffre },
+                                        new AjaxOptions
+                                        {
+                                            OnSuccess = "DetailsOnSuccessNotes",
+                                            OnFailure = "DetailsOnFailure"
+                                        }))
+                                    {
+                                        <p style="padding-top: 5px"><input class="btn btn-danger btn-xs" value="Détails" type="submit" id="btnOffre_@offre.NoOffre" data-toggle="modal" /></p>
+                                    }
+                                </td>
+                                <td style="text-align: center">
+                                    @using (Ajax.BeginForm("GetDetailsJsonNotes", new { noOffre = @offre.NoOffre },
+                                        new AjaxOptions
+                                        {
+                                            OnSuccess = "ModifOnSuccessNotes",
+                                            OnFailure = "DetailsOnFailure"
+                                        }))
+                                    {
+                                        <p style="padding-top: 5px"><input class="btn btn-danger btn-xs" value="Modifier" type="submit" id="btnOffre_@offre.NoOffre" data-toggle="modal" /></p>
+                                    }
+                                </td>
+                                <td style="text-align: center;padding-top: 10px">
+                                    <a onclick="AfficherModalFermeture('@offre.NoOffre', '@offre.NomLivre')" class="btn btn-danger btn-xs">Fermer</a>
+                                </td>
+
+                                @{
+
+                            if (offre.estNouv)
+                            {
+                                <td>
+                                    <span style="color: red"> * Nouveau</span>
+                                </td>
+                            }
+
+                                }
+
+                            </tr>
+                        }
+                    </table>
+                </div>
+
+                <div class="table-responsive">
+                    <h3 style="color: red">Liste de vos offres actives pour les calculatrices</h3>
+                    <table class="table table-striped table-bordered table-hover table-condensed">
+                        <thead style="font-weight: bold;text-align: center">
+                            <tr>
+                                <th>No offre</th>
+                                <th>Modèle</th>
+                                <th>Détails</th>
+                                <th>Modifier l'offre</th>
+                                <th>Fermer l'offre</th>
+                            </tr>
+                        </thead>
+                        @foreach (var offre in @Model.ListeOffresUtilCalculatrices)
+                        {
+                            <tr>
+                                <td style="text-align: center">
+                                    @offre.NoOffre
+                                </td>
+                                <td>@offre.ModeleCalculatrice</td>
+                                <td style="text-align: center">
+                                    @using (Ajax.BeginForm("GetDetailsJsonCalculatrice", new { noOffre = @offre.NoOffre },
+                                        new AjaxOptions
+                                        {
+                                            OnSuccess = "DetailsOnSuccessCalculatrice",
+                                            OnFailure = "DetailsOnFailure"
+                                        }))
+                                    {
+                                        <p style="padding-top: 5px"><input class="btn btn-danger btn-xs" value="Détails" type="submit" id="btnOffre_@offre.NoOffre" data-toggle="modal" /></p>
+                                    }
+                                </td>
+                                <td style="text-align: center">
+                                    @using (Ajax.BeginForm("GetDetailsJsonCalculatrice", new { noOffre = @offre.NoOffre },
+                                        new AjaxOptions
+                                        {
+                                            OnSuccess = "ModifOnSuccessCalculatrice",
+                                            OnFailure = "DetailsOnFailure"
+                                        }))
+                                    {
+                                        <p style="padding-top: 5px"><input class="btn btn-danger btn-xs" value="Modifier" type="submit" id="btnOffre_@offre.NoOffre" data-toggle="modal" /></p>
+                                    }
+                                </td>
+                                <td style="text-align: center;padding-top: 10px">
+                                    <a onclick="AfficherModalFermeture('@offre.NoOffre', '@offre.ModeleCalculatrice')" class="btn btn-danger btn-xs">Fermer</a>
+                                </td>
+
+                                @{
+
+                            if (offre.estNouv)
+                            {
+                                <td>
+                                    <span style="color: red"> * Nouveau</span>
+                                </td>
+                            }
+
+                                }
+
+                            </tr>
+                        }
+                    </table>
+                </div>
             </div>
         </div>
     }
 </div>
     @using (Html.BeginForm("Create", "Offer", FormMethod.Post))
     {
+        <script>
+            function ShowFieldsOnTypeArticle(e)
+            {
+
+                var typeArticle = $(e).find('option:selected').val();
+                if (typeArticle == 1)
+                {
+                    document.getElementById("divISBNLivre").style.display = "";
+                    document.getElementById("divTitreLivre").style.display = "";
+                    document.getElementById("divAuteursLivre").style.display = "";
+                    document.getElementById("divDateEditionLivre").style.display = "";
+                    document.getElementById("divCodeNotesCours").style.display = "none";
+                    document.getElementById("divTitreNotesCours").style.display = "none";
+                    document.getElementById("divSousTitreNotesCours").style.display = "none";
+                    document.getElementById("divDateRedactionNotesCours").style.display = "none";
+                    document.getElementById("divDateRevisionNotesCours").style.display = "none";
+                    document.getElementById("divModeleCalculatrice").style.display = "none";
+                }
+                else if(typeArticle == 2)
+                {
+                    document.getElementById("divISBNLivre").style.display = "none";
+                    document.getElementById("divTitreLivre").style.display = "none";
+                    document.getElementById("divAuteursLivre").style.display = "none";
+                    document.getElementById("divDateEditionLivre").style.display = "none";
+                    document.getElementById("divCodeNotesCours").style.display = "";
+                    document.getElementById("divTitreNotesCours").style.display = "";
+                    document.getElementById("divSousTitreNotesCours").style.display = "";
+                    document.getElementById("divDateRedactionNotesCours").style.display = "";
+                    document.getElementById("divDateRevisionNotesCours").style.display = "";
+                    document.getElementById("divModeleCalculatrice").style.display = "none";
+                }
+                else if (typeArticle == 3) {
+                    document.getElementById("divISBNLivre").style.display = "none";
+                    document.getElementById("divTitreLivre").style.display = "none";
+                    document.getElementById("divAuteursLivre").style.display = "none";
+                    document.getElementById("divDateEditionLivre").style.display = "none";
+                    document.getElementById("divCodeNotesCours").style.display = "none";
+                    document.getElementById("divTitreNotesCours").style.display = "none";
+                    document.getElementById("divSousTitreNotesCours").style.display = "none";
+                    document.getElementById("divDateRedactionNotesCours").style.display = "none";
+                    document.getElementById("divDateRevisionNotesCours").style.display = "none";
+                    document.getElementById("divModeleCalculatrice").style.display = "";
+                } 
+            }
+        </script>
         <div class="modal fade" id="addOfferDialog" tabindex="-1">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -119,24 +286,159 @@
                         <h4 style="color: white!important">Ajout d'une offre</h4>
                     </div>
                     <div class="modal-body">
-
                         <div>
+                            <label style="width: 180px">Type d'article</label> 
+                           
+                            @Html.DropDownListFor(m => m.TypeArticle, new SelectList(new List<Object>
+                            {
+                                 new { value = 1 , text = "Livre"  },
+                                 new { value = 2 , text = "Notes de cours"  },
+                                 new { value = 3 , text = "Calculatrice"  }                         
+                            },
+                            "value",
+                            "text",
+                            1
+                            ),
+                            new { onchange = "ShowFieldsOnTypeArticle(this)" })
+                            <span style="font-weight: bolder;color: red"> *</span>
+                        </div>
+                        <div id="divISBNLivre">
                             <label style="width: 180px">Code ISBN</label> @Html.TextBoxFor(m => m.Livre.CodeIsbn, null, new { style = "width: 200px" }) 
                             <span style="font-weight: bolder;color: red"> *</span>
                             @Html.ValidationMessageFor(m => m.Livre.CodeIsbn)
                         </div>
                         
-                        <div>
+                        <div id="divTitreLivre">
                             <label style="width: 180px">Titre</label><span id="titreLivre" style="padding-left: 3px"></span>
                         </div>
                         
-                        <div>
+                        <div id="divAuteursLivre">
                             <label style="width: 180px">Auteur(s)</label><span id="ateurLivre" style="padding-left: 3px"></span>
                         </div>
-                        <div>
+                        <div id="divDateEditionLivre">
                             <label style="width: 180px">Date d'édition</label><span id="anneeEditionLivre" style="padding-left: 3px"></span>
                         </div>
-                        
+
+                        <div id="divCodeNotesCours" style="display:none">
+                            <label style="width: 180px">Code Barre</label> @Html.TextBoxFor(m => m.NotesDeCours.CodeBarre, null, new { style = "width: 200px" })
+                            <span style="font-weight: bolder;color: red"> *</span>
+                            @Html.ValidationMessageFor(m => m.NotesDeCours.CodeBarre)
+                        </div>
+
+                        <div id="divTitreNotesCours" style="display:none">
+                            <label style="width: 180px">Titre</label>@Html.TextBoxFor(m => m.NotesDeCours.Nom, null, new { style = "width: 200px" })
+                        </div>
+                        <div id="divSousTitreNotesCours" style="display:none">
+                            <label style="width: 180px">Sous-Titre</label>@Html.TextBoxFor(m => m.NotesDeCours.SousTitre, null, new { style = "width: 200px" })
+                        </div>
+                        <div id="divDateRedactionNotesCours" style="display:none">
+                            <label style="width: 180px">Date de rédaction</label>
+                            @Html.DropDownListFor(m => m.NotesDeCours.MoisRedaction, new SelectList(new List<Object>
+                            {
+                                 new { value = "Janvier" , text = "Janvier"  },
+                                 new { value = "Février"  , text = "Février"  },
+                                 new { value = "Mars" , text = "Mars"  },
+                                 new { value = "Avril" , text = "Avril"  },
+                                 new { value = "Mai" , text = "Mai"  },
+                                 new { value = "Juin" , text = "Juin"  },
+                                 new { value = "Juillet" , text = "Juillet"  },
+                                 new { value = "Août" , text = "Août"  },
+                                 new { value = "Septembre" , text = "Septembre"  },
+                                 new { value = "Octobre" , text = "Octobre"  },
+                                 new { value = "Novembre" , text = "Novembre"  },
+                                 new { value = "Décembre" , text = "Décembre"  }
+                            },
+                            "value",
+                            "text",
+                            "Janvier"
+                            ))
+                            @Html.DropDownListFor(m => m.NotesDeCours.AnneeRedaction, new SelectList(new List<Object>
+                            {
+                                 new { value = 2000 , text = "2000"  },
+                                 new { value = 2001 , text = "2001"  },
+                                 new { value = 2002 , text = "2002"  },
+                                 new { value = 2003 , text = "2003"  },
+                                 new { value = 2004 , text = "2004"  },
+                                 new { value = 2005 , text = "2005"  },
+                                 new { value = 2006 , text = "2006"  },
+                                 new { value = 2007 , text = "2007"  },
+                                 new { value = 2008 , text = "2008"  },
+                                 new { value = 2009 , text = "2009"  },
+                                 new { value = 2010 , text = "2010"  },
+                                 new { value = 2011 , text = "2011"  },
+                                 new { value = 2012 , text = "2012"  },
+                                 new { value = 2013 , text = "2013"  },
+                                 new { value = 2014 , text = "2014"  },
+                                 new { value = 2015 , text = "2015"  },
+                            },
+                            "value",
+                            "text",
+                            2000
+                            ))
+
+                        </div>
+                        <div id="divDateRevisionNotesCours" style="display:none">
+                            <label style="width: 180px">Date de révision</label>
+                            @Html.DropDownListFor(m => m.NotesDeCours.MoisRevision, new SelectList(new List<Object>
+                            {
+                                    new { value = "Janvier" , text = "Janvier"  },
+                                 new { value = "Février"  , text = "Février"  },
+                                 new { value = "Mars" , text = "Mars"  },
+                                 new { value = "Avril" , text = "Avril"  },
+                                 new { value = "Mai" , text = "Mai"  },
+                                 new { value = "Juin" , text = "Juin"  },
+                                 new { value = "Juillet" , text = "Juillet"  },
+                                 new { value = "Août" , text = "Août"  },
+                                 new { value = "Septembre" , text = "Septembre"  },
+                                 new { value = "Octobre" , text = "Octobre"  },
+                                 new { value = "Novembre" , text = "Novembre"  },
+                                 new { value = "Décembre" , text = "Décembre"  }
+                            },
+                            "value",
+                            "text",
+                            "Janvier"
+                            ))
+                            @Html.DropDownListFor(m => m.NotesDeCours.AnneeRevision, new SelectList(new List<Object>
+                            {
+                                 new { value = 2000 , text = "2000"  },
+                                 new { value = 2001 , text = "2001"  },
+                                 new { value = 2002 , text = "2002"  },
+                                 new { value = 2003 , text = "2003"  },
+                                 new { value = 2004 , text = "2004"  },
+                                 new { value = 2005 , text = "2005"  },
+                                 new { value = 2006 , text = "2006"  },
+                                 new { value = 2007 , text = "2007"  },
+                                 new { value = 2008 , text = "2008"  },
+                                 new { value = 2009 , text = "2009"  },
+                                 new { value = 2010 , text = "2010"  },
+                                 new { value = 2011 , text = "2011"  },
+                                 new { value = 2012 , text = "2012"  },
+                                 new { value = 2013 , text = "2013"  },
+                                 new { value = 2014 , text = "2014"  },
+                                 new { value = 2015 , text = "2015"  },
+                            },
+                            "value",
+                            "text",
+                            2000
+                            ))
+                        </div>
+                        <div id="divModeleCalculatrice" style="display:none">
+                            <label style="width: 180px">Modèle</label>
+                            
+                            @Html.DropDownListFor(m => m.Calculatrice.NoCalculatrice, new SelectList(new List<Object>
+                            {
+                                 new { value = "" , text = ""  },
+                                 new { value = "1"  , text = "Voyage 200"  },
+                                 new { value = "2" , text = "TI NSpire"  }
+                              
+                            },
+                            "value",
+                            "text",
+                            ""
+                            ))
+                            <span style="font-weight: bolder;color: red"> *</span>
+
+                        </div>
                         <div>
                             <label style="width: 180px">État</label> @Html.DropDownListFor(m => m.SelectedEtat, Model.Etats, new { style = "width: 200px" })
                         </div>
@@ -150,7 +452,7 @@
                         </div>
 
                         <div>
-                            <label style="width: 180px">Prix</label> @Html.TextBoxFor(m => m.Prix, null, new { style = "width: 200px" })
+                            <label style="width: 180px">Prix demandé</label> @Html.TextBoxFor(m => m.Prix, null, new { style = "width: 200px" })
                         </div>
 
                         <div>
@@ -158,13 +460,7 @@
                             @Html.TextAreaFor(m => m.Remarques, htmlAttributes: new { style = "width: 300px;height: 80px" })
                             @Html.ValidationMessageFor(m => m.Remarques)
                         </div>
-                        <div style="padding-top: 7px;color: orangered">
-                            <p>
-                                **Vous devez indiquez dans le champ remarques, si vous voulez échanger le livre ou le vendre.
-                                Si vous l'échangez, vous pouvez indiquer le livre contre lequel vous voulez l'échanger. Si vous le vendez, il faut indiquer le prix demandé.
-                                Nous encourageons les échanges de livres entre les étudiants.
-                            </p>
-                        </div>
+                       
                     </div>
                     <div class="modal-footer">
                         <span class="form-group">
@@ -195,13 +491,76 @@
                 <div> <div> <label style="font-weight: bold;width: 190px">Recommandé pour cours: </label><span id="coursRecom"></span></div></div>
                 <div> <div> <label style="font-weight: bold;width: 190px">Auteur(s): </label><span id="auteurLivre"></span></div></div>
                 <div> <div> <label style="font-weight: bold;width: 190px">État: </label><span id="etatLivre"></span></div></div>
-                <div> <div> <label style="font-weight: bold;width: 190px">Prix: </label><span id="prixLivre"></span><label style="font-weight: bold;">$ </label></div></div>
+                <div> <div> <label style="font-weight: bold;width: 190px">Prix demandé: </label><span id="prixLivre"></span><label style="font-weight: bold;">$ </label></div></div>
                 <div> <div> <label style="font-weight: bold;width: 190px">Remarques: </label><span id="remLivre"></span></div></div>
 
                 <fieldset style="margin-top: 40px">
                     <legend>Information sur l'offrant</legend>
                     <div> <div> <label style="font-weight: bold;width: 170px">Courriel: </label><a id="courrProprio"></a></div></div>
                     <div> <div> <label style="font-weight: bold;width: 170px">Téléphone: </label><span id="telProprio"></span></div></div>
+                </fieldset>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger btn-sm" data-dismiss="modal"> Annuler</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="detailsDialogNotes" tabindex="-1">
+    <div class="modal-dialog modal-dialog modal-vertical-centered">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #9a161a">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h4 style="color: white!important">Détails sur les notes de cours <span id="headerDetails"></span></h4>
+            </div>
+            <div class="modal-body" style="height: 400px">
+
+                <div> <div> <label style="font-weight: bold;width: 190px">Nom: </label><span id="nomNotes"></span></div></div>
+                <div> <div> <label style="font-weight: bold;width: 190px">Sous-titre: </label><span id="sousTitreNotes"></span></div></div>
+                <div> <div> <label style="font-weight: bold;width: 190px">Mois et année de rédaction: </label><span id="dateRedaction"></span></div></div>
+                <div> <div> <label style="font-weight: bold;width: 190px">Mois et année de révision: </label><span id="dateRevision"></span></div></div>
+                <div> <div> <label style="font-weight: bold;width: 190px">Obligatoire pour cours: </label><span id="coursObligNotes"></span></div></div>
+                <div> <div> <label style="font-weight: bold;width: 190px">Recommandé pour cours: </label><span id="coursRecomNotes"></span></div></div>
+                <div> <div> <label style="font-weight: bold;width: 190px">État: </label><span id="etatNotes"></span></div></div>
+                <div> <div> <label style="font-weight: bold;width: 190px">Prix demandé: </label><span id="prixNotes"></span><label style="font-weight: bold;">$ </label></div></div>
+                <div> <div> <label style="font-weight: bold;width: 190px">Remarques: </label><span id="remNotes"></span></div></div>
+
+                <fieldset style="margin-top: 40px">
+                    <legend>Information sur l'offrant</legend>
+                    <div> <div> <label style="font-weight: bold;width: 170px">Courriel: </label><a id="courrProprioNotes"></a></div></div>
+                    <div> <div> <label style="font-weight: bold;width: 170px">Téléphone: </label><span id="telProprioNotes"></span></div></div>
+                </fieldset>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger btn-sm" data-dismiss="modal"> Annuler</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="detailsDialogCalculatrice" tabindex="-1">
+    <div class="modal-dialog modal-dialog modal-vertical-centered">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #9a161a">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h4 style="color: white!important">Détails sur la calculatrice <span id="headerDetailsCalcu"></span></h4>
+            </div>
+            <div class="modal-body" style="height: 400px">
+
+                <div> <div> <label style="font-weight: bold;width: 190px">Modèle: </label><span id="modeleCalculatrice"></span></div></div>
+                <div> <div> <label style="font-weight: bold;width: 190px">Obligatoire pour cours: </label><span id="coursObligCalcu"></span></div></div>
+                <div> <div> <label style="font-weight: bold;width: 190px">Recommandé pour cours: </label><span id="coursRecomCalcu"></span></div></div>
+                <div> <div> <label style="font-weight: bold;width: 190px">État: </label><span id="etatCalcu"></span></div></div>
+                <div> <div> <label style="font-weight: bold;width: 190px">Prix demandé: </label><span id="prixCalcu"></span><label style="font-weight: bold;">$ </label></div></div>
+                <div> <div> <label style="font-weight: bold;width: 190px">Remarques: </label><span id="remCalcu"></span></div></div>
+
+                <fieldset style="margin-top: 40px">
+                    <legend>Information sur l'offrant</legend>
+                    <div> <div> <label style="font-weight: bold;width: 170px">Courriel: </label><a id="courrProprioCalcu"></a></div></div>
+                    <div> <div> <label style="font-weight: bold;width: 170px">Téléphone: </label><span id="telProprioCalcu"></span></div></div>
                 </fieldset>
 
             </div>
@@ -224,7 +583,7 @@
                     <div> <div> <label style="font-weight: bold;width: 190px">Titre: </label><span id="nomLivreModif"></span></div></div>
                     <div> <div> <label style="font-weight: bold;width: 190px">Obligatoire pour cours: </label><input id="coursObligModif"></div></div>
                     <div> <div> <label style="font-weight: bold;width: 190px">Recommandé pour cours: </label><input id="coursRecomModif"></div></div>
-                    <div> <div> <label style="font-weight: bold;width: 190px">Prix: </label><input id="prixModif"></div></div>
+                    <div> <div> <label style="font-weight: bold;width: 190px">Prix demandé: </label><input id="prixModif"></div></div>
                     <div>
                         <label style="font-weight: bold;width: 187px">État</label> @Html.DropDownListFor(m => m.SelectedEtatModif, Model.Etats, new { style = "width: 218px" })
                     </div>               
@@ -251,7 +610,7 @@
                 <div class="modal-body">
 
                     <div>
-                        <label style="width: 180px">Nom du livre: </label> <span id="lbNomFerme"></span>
+                        <label style="width: 180px">Nom de l'article: </label> <span id="lbNomFerme"></span>
                     </div>
 
                     <div>
@@ -273,6 +632,8 @@
         </div>
     </div>
 }
+
+
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

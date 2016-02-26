@@ -26,7 +26,7 @@ namespace PEETS.Controllers
         [WebMethod]
         public ActionResult Index()
         {
-            var offreModel = new OfferModel { Livre = new LivreModel { }, ListeOffresUtil = ObtenirListeOffresUtil() };
+            var offreModel = new OfferModel { Livre = new LivreModel { }, ListeOffresUtil = ObtenirListeOffresUtil(), ListeOffresUtilNotesCours = ObtenirListeOffresUtilNotesCours(), ListeOffresUtilCalculatrices = ObtenirListeOffresUtilCalculatrice() };
             ViewBag.menuItemActive = "Offre";
             return View("ManageOffer", offreModel);
         }
@@ -75,57 +75,257 @@ namespace PEETS.Controllers
             return offres;
         }
 
+        public List<OffreBean> ObtenirListeOffresUtilNotesCours()
+        {
+            List<OffreBean> offres = null;
+            SqlConnection cnn = null;
+            var connetionString = Properties.Settings.Default.dbConnectionString;
+            var sql = "SELECT o.Id, n.Nom " +
+                         "FROM Offre o " +
+                         "JOIN NotesDeCours n On o.IdArticle = n.IdNotesDeCours " +
+                         "Where o.IdTypeArticle = 2 AND o.userId = '" + User.Identity.GetUserId() + "' And o.IndActif='1' order by o.Id desc";
+
+            cnn = new SqlConnection(connetionString);
+
+            try
+            {
+                cnn.Open();
+                var command = new SqlCommand(sql, cnn);
+                offres = new List<OffreBean>();
+
+                var dataReader = command.ExecuteReader();
+
+                while (dataReader.Read())
+                {
+                    var offre = new OffreBean
+                    {
+                        NoOffre = (int)dataReader.GetValue(0),
+                        NomLivre = dataReader.GetValue(1).ToString(),
+                        estNouv = false
+                    };
+
+                    offres.Add(offre);
+                }
+
+                dataReader.Close();
+                command.Dispose();
+                cnn.Close();
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return offres;
+        }
+
+        public List<OffreBean> ObtenirListeOffresUtilCalculatrice()
+        {
+            List<OffreBean> offres = null;
+            SqlConnection cnn = null;
+            var connetionString = Properties.Settings.Default.dbConnectionString;
+            var sql = "SELECT o.Id, c.Modele " +
+                         "FROM Offre o " +
+                         "JOIN Calculatrice c On o.IdArticle = c.IdCalculatrice " +
+                         "Where o.IdTypeArticle = 3 AND o.userId = '" + User.Identity.GetUserId() + "' And o.IndActif='1' order by o.Id desc";
+
+            cnn = new SqlConnection(connetionString);
+
+            try
+            {
+                cnn.Open();
+                var command = new SqlCommand(sql, cnn);
+                offres = new List<OffreBean>();
+
+                var dataReader = command.ExecuteReader();
+
+                while (dataReader.Read())
+                {
+                    var offre = new OffreBean
+                    {
+                        NoOffre = (int)dataReader.GetValue(0),
+                        ModeleCalculatrice = dataReader.GetValue(1).ToString(),
+                        estNouv = false
+                    };
+
+                    offres.Add(offre);
+                }
+
+                dataReader.Close();
+                command.Dispose();
+                cnn.Close();
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return offres;
+        }
+
         public ActionResult Create(OfferModel offre)
         {
                 if (offre != null)
                 {
 
-                    int? noLivre = TraiterLivre(offre.Livre);
-                    int? id = null;
-
-                    if (noLivre != null)
-                    {                      
-                        offre.Livre.NoLivre = (int)noLivre;
-  
-                        var connetionString = Properties.Settings.Default.dbConnectionString;
-                        string sql = "INSERT INTO Offre(IdArticle, Remarques, Etat, CoursOblig, CoursRecom, userId, Prix, DateCreation, IdTypeArticle) OUTPUT Inserted.ID " +
-                                           "VALUES(@IdLivre, @Remarques, @Etat, @CoursOblig, @CoursRecom, @userId, @Prix, GETDATE(),1) SET @id=SCOPE_IDENTITY()";
-
-                        var cnn = new SqlConnection(connetionString);
-
-                        try
-                        {
-                            cnn.Open();
-
-                            var command = new SqlCommand(sql, cnn);
-
-                            RemplirParametreOffre(command, offre);
-
-                            command.ExecuteNonQuery();
-                            id = (int?)command.Parameters["@id"].Value;
-                            command.Dispose();
-                            cnn.Close();
-
-                            //publishToFacebook();
-
-                            offre.Message = "L'offre " + id + " a été créée avec succès.";
-                            offre.TypeMessage = TypeMessage.Succes;
-                        }
-                        catch (Exception ex)
-                        {
-                            offre.Message = "Un problème est survenu lors de la création de l'offre.";
-                            offre.TypeMessage = TypeMessage.Erreur;
-                        }
-                    }
-                    else
+                    switch(offre.TypeArticle)
                     {
-                        offre.Message = "Le code ISBN soumis n'est pas valide.";
-                        offre.TypeMessage = TypeMessage.Warning;
-                    }
+                        case 1:
+                        {
+                            int? noLivre = TraiterLivre(offre.Livre);
+                            int? id = null;
 
-                    offre.ListeOffresUtil = ObtenirListeOffresUtil();
-                    offre.ListeOffresUtil.First(x => x.NoOffre == id).estNouv = true;
-                    offre.Livre = new LivreModel {};
+                            if (noLivre != null)
+                            {                      
+                                offre.Livre.NoLivre = (int)noLivre;
+  
+                                var connetionString = Properties.Settings.Default.dbConnectionString;
+                                string sql = "INSERT INTO Offre(IdArticle, Remarques, Etat, CoursOblig, CoursRecom, userId, Prix, DateCreation, IdTypeArticle) OUTPUT Inserted.ID " +
+                                                   "VALUES(@IdLivre, @Remarques, @Etat, @CoursOblig, @CoursRecom, @userId, @Prix, GETDATE(),1) SET @id=SCOPE_IDENTITY()";
+
+                                var cnn = new SqlConnection(connetionString);
+
+                                try
+                                {
+                                    cnn.Open();
+
+                                    var command = new SqlCommand(sql, cnn);
+
+                                    RemplirParametreOffre(command, offre);
+
+                                    command.ExecuteNonQuery();
+                                    id = (int?)command.Parameters["@id"].Value;
+                                    command.Dispose();
+                                    cnn.Close();
+
+                                    //publishToFacebook();
+
+                                    offre.Message = "L'offre " + id + " a été créée avec succès.";
+                                    offre.TypeMessage = TypeMessage.Succes;
+                                }
+                                catch (Exception ex)
+                                {
+                                    offre.Message = "Un problème est survenu lors de la création de l'offre.";
+                                    offre.TypeMessage = TypeMessage.Erreur;
+                                }
+                            }
+                            else
+                            {
+                                offre.Message = "Le code ISBN soumis n'est pas valide.";
+                                offre.TypeMessage = TypeMessage.Warning;
+                            }
+
+                            offre.ListeOffresUtilCalculatrices = ObtenirListeOffresUtilCalculatrice();
+                            offre.ListeOffresUtilNotesCours = ObtenirListeOffresUtilNotesCours();
+                            offre.ListeOffresUtil = ObtenirListeOffresUtil();
+                            offre.ListeOffresUtil.First(x => x.NoOffre == id).estNouv = true;
+                            offre.Livre = new LivreModel {};
+                        }
+                        break;
+                        case 2 :
+
+                            int? noNotesDeCours = TraiterNotesDeCours(offre.NotesDeCours);
+                            int? idOffreNotesCours = null;
+
+                            if (noNotesDeCours != null)
+                            {
+
+                                offre.NotesDeCours.NoNotesDeCours = (int)noNotesDeCours;
+  
+                                var connetionString = Properties.Settings.Default.dbConnectionString;
+                                string sql = "INSERT INTO Offre(IdArticle, Remarques, Etat, CoursOblig, CoursRecom, userId, Prix, DateCreation, IdTypeArticle) OUTPUT Inserted.ID " +
+                                                   "VALUES(@IdNotes, @Remarques, @Etat, @CoursOblig, @CoursRecom, @userId, @Prix, GETDATE(),2) SET @id=SCOPE_IDENTITY()";
+
+                                var cnn = new SqlConnection(connetionString);
+
+                                try
+                                {
+                                    cnn.Open();
+
+                                    var command = new SqlCommand(sql, cnn);
+
+                                    RemplirParametreOffre(command, offre);
+
+                                    command.ExecuteNonQuery();
+                                    idOffreNotesCours = (int?)command.Parameters["@id"].Value;
+                                    command.Dispose();
+                                    cnn.Close();
+
+                                    //publishToFacebook();
+
+                                    offre.Message = "L'offre " + idOffreNotesCours + " a été créée avec succès.";
+                                    offre.TypeMessage = TypeMessage.Succes;
+                                }
+                                catch (Exception ex)
+                                {
+                                    offre.Message = "Un problème est survenu lors de la création de l'offre.";
+                                    offre.TypeMessage = TypeMessage.Erreur;
+                                }
+                            }
+                            else
+                            {
+                                offre.Message = "Le code barre soumis n'est pas valide.";
+                                offre.TypeMessage = TypeMessage.Warning;
+                            }
+
+                            offre.ListeOffresUtilCalculatrices = ObtenirListeOffresUtilCalculatrice();
+                            offre.ListeOffresUtilNotesCours = ObtenirListeOffresUtilNotesCours();
+                            offre.ListeOffresUtil = ObtenirListeOffresUtil();
+                            offre.ListeOffresUtilNotesCours.First(x => x.NoOffre == idOffreNotesCours).estNouv = true;
+                            offre.NotesDeCours = new NotesDeCoursModel {};
+                        break;
+                        case 3:
+
+                        int? noCalculatrice = offre.Calculatrice.NoCalculatrice;
+                        int? idOffreCalculatrice = null;
+
+                        if (noCalculatrice != 0)
+                        {
+                            offre.Calculatrice.NoCalculatrice = (int)noCalculatrice;
+
+                            var connetionString = Properties.Settings.Default.dbConnectionString;
+                            string sql = "INSERT INTO Offre(IdArticle, Remarques, Etat, CoursOblig, CoursRecom, userId, Prix, DateCreation, IdTypeArticle) OUTPUT Inserted.ID " +
+                                               "VALUES(@IdCalculatrice, @Remarques, @Etat, @CoursOblig, @CoursRecom, @userId, @Prix, GETDATE(),3) SET @id=SCOPE_IDENTITY()";
+
+                            var cnn = new SqlConnection(connetionString);
+
+                            try
+                            {
+                                cnn.Open();
+
+                                var command = new SqlCommand(sql, cnn);
+
+                                RemplirParametreOffre(command, offre);
+
+                                command.ExecuteNonQuery();
+                                idOffreCalculatrice = (int?)command.Parameters["@id"].Value;
+                                command.Dispose();
+                                cnn.Close();
+
+                                //publishToFacebook();
+
+                                offre.Message = "L'offre " + idOffreCalculatrice + " a été créée avec succès.";
+                                offre.TypeMessage = TypeMessage.Succes;
+                            }
+                            catch (Exception ex)
+                            {
+                                offre.Message = "Un problème est survenu lors de la création de l'offre.";
+                                offre.TypeMessage = TypeMessage.Erreur;
+                            }
+                        }
+                        else
+                        {
+                            offre.Message = "Le modèle soumis n'est pas valide.";
+                            offre.TypeMessage = TypeMessage.Warning;
+                        }
+
+                        offre.ListeOffresUtilCalculatrices = ObtenirListeOffresUtilCalculatrice();
+                        offre.ListeOffresUtilNotesCours = ObtenirListeOffresUtilNotesCours();
+                        offre.ListeOffresUtil = ObtenirListeOffresUtil();
+                        offre.ListeOffresUtilCalculatrices.First(x => x.NoOffre == idOffreCalculatrice).estNouv = true;
+                        offre.Calculatrice = new CalculatriceModel { };
+                        break;
+                    }
                 }
 
                 ViewBag.menuItemActive = "Offre";
@@ -194,6 +394,115 @@ namespace PEETS.Controllers
                         Auteur = dataReader.GetValue(11).ToString(),
                         Prix = Convert.ToDouble(dataReader.GetValue(12).ToString()),
                         AnneeEdition = dataReader.GetValue(13).ToString()
+                    };
+
+                }
+
+                dataReader.Close();
+                command.Dispose();
+                cnn.Close();
+            }
+            catch (Exception ex)
+            {
+                offre = new OffreBean();
+                offre.Message = "Une erreur est survenue";
+            }
+
+            return Json(offre, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult GetDetailsJsonNotes(int noOffre)
+        {
+            SqlConnection cnn = null;
+            string connetionString = Properties.Settings.Default.dbConnectionString;
+            SqlCommand command = null;
+            OffreBean offre = null;
+            string sql = "SELECT o.Id, e.DesctEtat, o.CoursOblig, o.CoursRecom, " +
+                         "n.Nom, n.SousTitre,n.MoisRedaction,n.AnneeRedaction,n.MoisRevision,n.AnneeRevision, o.Remarques, u.Email, u.PhoneNumber,  o.Prix " +
+                         "FROM Offre o " +
+                         "JOIN NotesDeCours n On o.IdArticle = n.IdNotesDeCours " +
+                         "JOIN Etat e ON o.Etat = e.CodeEtat " +
+                         "JOIN AspNetUsers u On u.Id = o.userId " +
+                         "Where o.IdTypeArticle=2 AND o.Id = " + noOffre;
+
+            cnn = new SqlConnection(connetionString);
+
+            try
+            {
+                cnn.Open();
+                command = new SqlCommand(sql, cnn);
+                var dataReader = command.ExecuteReader();
+
+                while (dataReader.Read())
+                {
+                    offre = new OffreBean
+                    {
+                        NoOffre = (int)dataReader.GetValue(0),
+                        EtatLivre = dataReader.GetValue(1).ToString(),
+                        CoursObligatoires = dataReader.GetValue(2).ToString(),
+                        CoursRecommandes = dataReader.GetValue(3).ToString(),
+                        NomNotesCours = dataReader.GetValue(4).ToString(),
+                        SousTitre = dataReader.GetValue(5).ToString(),
+                        MoisRedaction = dataReader.GetValue(6).ToString(),
+                        AnneeRedaction = int.Parse(dataReader.GetValue(7).ToString()),
+                        MoisRevision = dataReader.GetValue(8).ToString(),
+                        AnneeRevision = int.Parse(dataReader.GetValue(9).ToString()),
+                        Remarques = dataReader.GetValue(10).ToString(),
+                        Email = dataReader.GetValue(11).ToString(),
+                        Phone = dataReader.GetValue(12).ToString(),
+                        Prix = Convert.ToDouble(dataReader.GetValue(13).ToString()),
+                    };
+
+                }
+
+                dataReader.Close();
+                command.Dispose();
+                cnn.Close();
+            }
+            catch (Exception ex)
+            {
+                offre = new OffreBean();
+                offre.Message = "Une erreur est survenue";
+            }
+
+            return Json(offre, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult GetDetailsJsonCalculatrice(int noOffre)
+        {
+            SqlConnection cnn = null;
+            string connetionString = Properties.Settings.Default.dbConnectionString;
+            SqlCommand command = null;
+            OffreBean offre = null;
+            string sql = "SELECT o.Id, e.DesctEtat, o.CoursOblig, o.CoursRecom, " +
+                         "c.Modele, o.Remarques, u.Email, u.PhoneNumber,  o.Prix " +
+                         "FROM Offre o " +
+                         "JOIN Calculatrice c On o.IdArticle = c.IdCalculatrice " +
+                         "JOIN Etat e ON o.Etat = e.CodeEtat " +
+                         "JOIN AspNetUsers u On u.Id = o.userId " +
+                         "Where o.IdTypeArticle=3 AND o.Id = " + noOffre;
+
+            cnn = new SqlConnection(connetionString);
+
+            try
+            {
+                cnn.Open();
+                command = new SqlCommand(sql, cnn);
+                var dataReader = command.ExecuteReader();
+
+                while (dataReader.Read())
+                {
+                    offre = new OffreBean
+                    {
+                        NoOffre = (int)dataReader.GetValue(0),
+                        EtatLivre = dataReader.GetValue(1).ToString(),
+                        CoursObligatoires = dataReader.GetValue(2).ToString(),
+                        CoursRecommandes = dataReader.GetValue(3).ToString(),
+                        ModeleCalculatrice = dataReader.GetValue(4).ToString(),
+                        Remarques = dataReader.GetValue(5).ToString(),
+                        Email = dataReader.GetValue(6).ToString(),
+                        Phone = dataReader.GetValue(7).ToString(),
+                        Prix = Convert.ToDouble(dataReader.GetValue(8).ToString()),
                     };
 
                 }
@@ -299,6 +608,33 @@ namespace PEETS.Controllers
             return noLivreReturn;
         }
 
+        public int? TraiterNotesDeCours(NotesDeCoursModel notesDeCours)
+        {
+            if (notesDeCours == null) return null;
+            var noNotesReturn = NotesDeCoursExiste(notesDeCours.CodeBarre);
+            if (noNotesReturn != null) return noNotesReturn;
+
+    
+            SqlConnection cnn = null;
+            string connectionString = Properties.Settings.Default.dbConnectionString;
+            string sql = "INSERT INTO NotesDeCours(Nom,SousTitre,MoisRedaction ,AnneeRedaction, MoisRevision,AnneeRevision, CodeBarre) OUTPUT Inserted.IdNotesDeCours " +
+                         "VALUES(@Nom,@SousTitre, @MoisRedaction, @AnneeRedaction, @MoisRevision,@AnneeRevision,@CodeBarre) SET @id=SCOPE_IDENTITY()";
+
+            cnn = new SqlConnection(connectionString);
+            cnn.Open();
+            var command = new SqlCommand(sql, cnn);
+
+            RemplirParametreNotesDeCours(command, notesDeCours);
+            command.ExecuteNonQuery();
+
+            var id = (int?)command.Parameters["@id"].Value;
+            noNotesReturn = id;
+            command.Dispose();
+            cnn.Close();
+
+            return noNotesReturn;
+        }
+
         private int? livreExiste(string codeIsbn)
         {
             int? noLivre = null;
@@ -326,6 +662,36 @@ namespace PEETS.Controllers
             cnn.Close();
 
             return noLivre;
+
+        }
+
+        private int? NotesDeCoursExiste(string codeBarre)
+        {
+            int? noNotesDeCours = null;
+
+            SqlConnection cnn = null;
+            string connectionString = Properties.Settings.Default.dbConnectionString;
+            SqlCommand command = null;
+            string sql = "SELECT n.IdNotesDeCours FROM NotesDeCours n Where n.CodeBarre = '" + codeBarre + "'";
+
+            cnn = new SqlConnection(connectionString);
+
+            cnn.Open();
+            command = new SqlCommand(sql, cnn);
+
+            SqlDataReader dataReader = command.ExecuteReader();
+
+            while (dataReader.Read())
+            {
+
+                noNotesDeCours = (int)dataReader.GetValue(0);
+            }
+
+            dataReader.Close();
+            command.Dispose();
+            cnn.Close();
+
+            return noNotesDeCours;
 
         }
         public void RemplirParametreLivre(SqlCommand command, VolumeInfo volumeInfo)
@@ -420,13 +786,81 @@ namespace PEETS.Controllers
             command.Parameters.Add("@id", SqlDbType.Int).Direction = ParameterDirection.Output; 
         }
 
+        public void RemplirParametreNotesDeCours(SqlCommand command, NotesDeCoursModel notesModel)
+        {
+            var paramNom = new SqlParameter("@Nom", SqlDbType.NVarChar)
+            {
+                Value = notesModel.Nom
+            };
+            command.Parameters.Add(paramNom);
+
+            var paramSousTitre = new SqlParameter("@SousTitre", SqlDbType.NVarChar)
+            {
+                Value = notesModel.SousTitre ?? ""
+            };
+            command.Parameters.Add(paramSousTitre);
+
+            var paramMoisRedaction = new SqlParameter("@MoisRedaction", SqlDbType.Int)
+            {
+                Value = notesModel.MoisRedaction
+            };
+            command.Parameters.Add(paramMoisRedaction);
+
+            var paramAnneeRedaction = new SqlParameter("@AnneeRedaction", SqlDbType.Int)
+            {
+                Value = notesModel.AnneeRedaction
+            };
+            command.Parameters.Add(paramAnneeRedaction);
+
+            var paramMoisRevision = new SqlParameter("@MoisRevision", SqlDbType.Int)
+            {
+                Value = notesModel.MoisRevision
+            };
+            command.Parameters.Add(paramMoisRevision);
+
+            var paramAnneeRevision = new SqlParameter("@AnneeRevision", SqlDbType.Int)
+            {
+                Value = notesModel.AnneeRevision
+            };
+            command.Parameters.Add(paramAnneeRevision);
+
+            var paramCodeBarre = new SqlParameter("@CodeBarre", SqlDbType.NVarChar)
+            {
+                Value = notesModel.CodeBarre
+            };
+            command.Parameters.Add(paramCodeBarre);
+
+            command.Parameters.Add("@id", SqlDbType.Int).Direction = ParameterDirection.Output;
+        }
+
+       
+
         public void RemplirParametreOffre(SqlCommand command, OfferModel offre)
         {
-            var paramIdLivre = new SqlParameter("@IdLivre", SqlDbType.NVarChar)
+            if (offre.TypeArticle == 1)
             {
-                Value = offre.Livre.NoLivre
-            };
-            command.Parameters.Add(paramIdLivre);
+                var paramIdLivre = new SqlParameter("@IdLivre", SqlDbType.Int)
+                {
+                    Value = offre.Livre.NoLivre
+                };
+                command.Parameters.Add(paramIdLivre);
+            }
+            else if(offre.TypeArticle == 2)
+            {   
+                var paramIdNotes = new SqlParameter("@IdNotes", SqlDbType.Int)
+                {
+                    Value = offre.NotesDeCours.NoNotesDeCours
+                };
+                command.Parameters.Add(paramIdNotes);
+            }
+            else if (offre.TypeArticle == 3)
+            {
+                var paramIdCalcu = new SqlParameter("@IdCalculatrice", SqlDbType.Int)
+                {
+                    Value = offre.Calculatrice.NoCalculatrice
+                };
+                command.Parameters.Add(paramIdCalcu);
+            }
 
             var paramRemarques = new SqlParameter("@Remarques", SqlDbType.NVarChar)
             {
@@ -517,12 +951,16 @@ namespace PEETS.Controllers
             {
                 Livre = new LivreModel {},
                 ListeOffresUtil = ObtenirListeOffresUtil(),
+                ListeOffresUtilNotesCours = ObtenirListeOffresUtilNotesCours(),
+                ListeOffresUtilCalculatrices = ObtenirListeOffresUtilCalculatrice(),
                 Message = message,
                 TypeMessage = type
             };
             ViewBag.menuItemActive = "Offre";
             return View("ManageOffer", offre);
         }
+
+       
 
         public bool UpdateOffre(OfferModel offre, int indActif = 0)
         {

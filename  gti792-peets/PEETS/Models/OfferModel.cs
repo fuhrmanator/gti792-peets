@@ -26,7 +26,7 @@ namespace PEETS.Models
 
         public IEnumerable<SelectListItem> Etats = new List<SelectListItem>
         {
-            new SelectListItem  {Value = "NEUF", Text = "Livre neuf"}, 
+            new SelectListItem  {Value = "NEUF", Text = "Article neuf"}, 
             new SelectListItem  {Value = "COMNE", Text = "Comme neuf"}, 
             new SelectListItem  {Value = "BONET", Text = "Bon état"}, 
             new SelectListItem {Value = "SATIS", Text = "Satisfaisant"},
@@ -86,15 +86,25 @@ namespace PEETS.Models
 
         public LivreModel Livre { get; set; }
 
+        public NotesDeCoursModel NotesDeCours { get; set; }
+
+        public CalculatriceModel Calculatrice { get; set; }
+
         public String Message { get; set; }
 
         public TypeMessage TypeMessage { get; set; }
 
         public List<OffreBean> ListeOffresUtil { get; set; }
 
+        public List<OffreBean> ListeOffresUtilNotesCours { get; set; }
+
+        public List<OffreBean> ListeOffresUtilCalculatrices { get; set; }
+
         public Double Prix { get; set; }
 
         public String AnneeEdition { get; set; }
+
+        public int TypeArticle { get; set; }
     }
 
 }

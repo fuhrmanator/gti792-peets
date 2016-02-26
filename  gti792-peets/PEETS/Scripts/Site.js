@@ -103,6 +103,55 @@ function DetailsOnSuccess(data) {
    
 }
 
+function DetailsOnSuccessNotes(data) {
+
+    if (data != null) {
+
+        var data2 = JSON.stringify(data);
+        var detail = JSON.parse(data2);
+
+        $("#headerDetails").text(detail.NomNotesCours);
+        $("#nomNotes").text(detail.NomNotesCours);
+        $("#sousTitreNotes").text(detail.SousTitre);
+        $("#dateRedaction").text(detail.MoisRedaction + " " + detail.AnneeRedaction);
+        $("#dateRevision").text(detail.MoisRevision + " " + detail.AnneeRevision);
+        $("#coursObligNotes").text(detail.CoursObligatoires);
+        $("#coursRecomNotes").text(detail.CoursRecommandes);
+        $("#prixNotes").text(detail.Prix);
+        $("#remNotes").text(detail.Remarques);
+        $("#etatNotes").text(detail.EtatLivre);
+        $("#courrProprioNotes").attr("href", "mailto:" + detail.Email);
+        $("#courrProprioNotes").text(detail.Email);
+        $("#telProprioNotes").text(detail.Phone);
+
+        $("#detailsDialogNotes").modal();
+    }
+
+}
+
+function DetailsOnSuccessCalculatrice(data) {
+
+    if (data != null) {
+
+        var data2 = JSON.stringify(data);
+        var detail = JSON.parse(data2);
+
+        $("#headerDetailsCalcu").text(detail.ModeleCalculatrice);
+        $("#modeleCalculatrice").text(detail.ModeleCalculatrice);
+        $("#coursObligCalcu").text(detail.CoursObligatoires);
+        $("#coursRecomCalcu").text(detail.CoursRecommandes);
+        $("#prixCalcu").text(detail.Prix);
+        $("#remCalcu").text(detail.Remarques);
+        $("#etatCalcu").text(detail.EtatLivre);
+        $("#courrProprioCalcu").attr("href", "mailto:" + detail.Email);
+        $("#courrProprioCalcu").text(detail.Email);
+        $("#telProprioCalcu").text(detail.Phone);
+
+        $("#detailsDialogCalculatrice").modal();
+    }
+
+}
+
 function ModifierOffre() {
 
 
@@ -144,6 +193,44 @@ function ModifOnSuccess(data) {
         $('#SelectedEtatModif option:selected').text(detail.EtatLivre);
         $("#remLivreModif").val(detail.Remarques);
         
+        $("#modifDialog").modal();
+    }
+
+}
+
+function ModifOnSuccessNotes(data) {
+
+    if (data != null) {
+
+        var data2 = JSON.stringify(data);
+        var detail = JSON.parse(data2);
+        $("#idOffre").text(detail.NoOffre);
+        $("#nomLivreModif").text(detail.NomNotesCours);
+        $("#coursObligModif").val(detail.CoursObligatoires);
+        $("#coursRecomModif").val(detail.CoursRecommandes);
+        $("#prixModif").val(detail.Prix);
+        $('#SelectedEtatModif option:selected').text(detail.EtatLivre);
+        $("#remLivreModif").val(detail.Remarques);
+
+        $("#modifDialog").modal();
+    }
+
+}
+
+function ModifOnSuccessCalculatrice(data) {
+
+    if (data != null) {
+
+        var data2 = JSON.stringify(data);
+        var detail = JSON.parse(data2);
+        $("#idOffre").text(detail.NoOffre);
+        $("#nomLivreModif").text(detail.ModeleCalculatrice);
+        $("#coursObligModif").val(detail.CoursObligatoires);
+        $("#coursRecomModif").val(detail.CoursRecommandes);
+        $("#prixModif").val(detail.Prix);
+        $('#SelectedEtatModif option:selected').text(detail.EtatLivre);
+        $("#remLivreModif").val(detail.Remarques);
+
         $("#modifDialog").modal();
     }
 
@@ -261,7 +348,11 @@ function GererPagination(command) {
 }
 
 function AfficherModalFermeture(id, nom) {
-    $("#lbNomFerme").text(nom);
+
     $("#NoOffre").val(id);
-   $("#fermerOfferDialog").modal();
+    $("#lbNomFerme").text(nom);
+    $("#fermerOfferDialog").modal();
+
+
+    
 }

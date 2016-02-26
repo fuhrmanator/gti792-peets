@@ -14,6 +14,7 @@ namespace PEETS.Models
         public int NoOffre { get; set; }
 
         public string NomLivre { get; set; }
+        public string NomNotesCours { get; set; }
         public Boolean estNouv { get; set; }
         public string CodeIsbn_10 { get; set; }
 
@@ -32,6 +33,12 @@ namespace PEETS.Models
         public bool Statut { get; set; }
         public double Prix { get; set; }
         public string AnneeEdition { get; set; }
+        public string MoisRedaction { get; set; }
+        public int AnneeRedaction { get; set; }
+        public string MoisRevision { get; set; }
+        public int AnneeRevision { get; set; }
+        public string ModeleCalculatrice { get; set; }
+        public string TypeArticle { get; set; }
         public static int GetTotalRows(string recherch)
         {
             var totalRows = 0;
@@ -43,7 +50,7 @@ namespace PEETS.Models
                                "FROM dbo.Offre o " +
                                "JOIN Livre l On o.IdArticle = l.Id " +
                                "JOIN dbo.Etat e ON o.Etat = e.CodeEtat " +
-                               "Where o.IdTypeArticle = 1 AND o.IndActif = '1' " + recherch;
+                               "Where o.IndActif = '1' " + recherch;
 
             var command = new SqlCommand(sql, cnn);
             SqlDataReader dataReader = command.ExecuteReader();
