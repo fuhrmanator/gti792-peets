@@ -800,7 +800,7 @@ namespace PEETS.Controllers
             };
             command.Parameters.Add(paramSousTitre);
 
-            var paramMoisRedaction = new SqlParameter("@MoisRedaction", SqlDbType.Int)
+            var paramMoisRedaction = new SqlParameter("@MoisRedaction", SqlDbType.NVarChar)
             {
                 Value = notesModel.MoisRedaction
             };
@@ -812,7 +812,7 @@ namespace PEETS.Controllers
             };
             command.Parameters.Add(paramAnneeRedaction);
 
-            var paramMoisRevision = new SqlParameter("@MoisRevision", SqlDbType.Int)
+            var paramMoisRevision = new SqlParameter("@MoisRevision", SqlDbType.NVarChar)
             {
                 Value = notesModel.MoisRevision
             };
