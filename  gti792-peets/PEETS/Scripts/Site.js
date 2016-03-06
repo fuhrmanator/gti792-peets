@@ -304,8 +304,9 @@ function Trier() {
     var triItem = $("#SelectedTriItem").val();
     var ordreItem = $("#SelectedOrdreItem").val();
     var pageActuel = $("#pageActuel").val();
+    var typeItem = $("#TypeArticle").val();
    
-    var tri = { tri: triItem, ordre: ordreItem, pageActuel: pageActuel, titre: nom, isbn: isbn, auteur: auteur, sigle: sigle };
+    var tri = { tri: triItem, ordre: ordreItem, pageActuel: pageActuel, titre: nom, isbn: isbn, auteur: auteur, sigle: sigle, typeArticle: typeItem };
 
     $.ajax({
         type: "POST",

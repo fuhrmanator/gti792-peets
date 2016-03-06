@@ -39,6 +39,7 @@ namespace PEETS.Models
         public int AnneeRevision { get; set; }
         public string ModeleCalculatrice { get; set; }
         public string TypeArticle { get; set; }
+        public string CodeBarre { get; set; }
         public static int GetTotalRows(string recherch)
         {
             var totalRows = 0;
@@ -50,7 +51,53 @@ namespace PEETS.Models
                                "FROM dbo.Offre o " +
                                "JOIN Livre l On o.IdArticle = l.Id " +
                                "JOIN dbo.Etat e ON o.Etat = e.CodeEtat " +
-                               "Where o.IndActif = '1' " + recherch;
+                               "Where o.IndActif = '1' AND o.IdTypeArticle = 1 " + recherch;
+
+            var command = new SqlCommand(sql, cnn);
+            SqlDataReader dataReader = command.ExecuteReader();
+            while (dataReader.Read())
+            {
+                totalRows = (int)dataReader.GetValue(0);
+            }
+
+            return totalRows;
+        }
+
+        public static int GetTotalRowsNotes(string recherch)
+        {
+            var totalRows = 0;
+
+            string connetionString = Properties.Settings.Default.dbConnectionString;
+            var cnn = new SqlConnection(connetionString);
+            cnn.Open();
+            string sql = "SELECT Count(o.Id) " +
+                               "FROM dbo.Offre o " +
+                               "JOIN NotesDeCours n On o.IdArticle = n.IdNotesDeCours " +
+                               "JOIN dbo.Etat e ON o.Etat = e.CodeEtat " +
+                               "Where o.IndActif = '1' AND o.IdTypeArticle = 2 " + recherch;
+
+            var command = new SqlCommand(sql, cnn);
+            SqlDataReader dataReader = command.ExecuteReader();
+            while (dataReader.Read())
+            {
+                totalRows = (int)dataReader.GetValue(0);
+            }
+
+            return totalRows;
+        }
+
+        public static int GetTotalRowsCalcu(string recherch)
+        {
+            var totalRows = 0;
+
+            string connetionString = Properties.Settings.Default.dbConnectionString;
+            var cnn = new SqlConnection(connetionString);
+            cnn.Open();
+            string sql = "SELECT Count(o.Id) " +
+                               "FROM dbo.Offre o " +
+                               "JOIN Calculatrice c On o.IdArticle = c.IdCalculatrice " +
+                               "JOIN dbo.Etat e ON o.Etat = e.CodeEtat " +
+                               "Where o.IndActif = '1' AND o.IdTypeArticle = 3 " + recherch;
 
             var command = new SqlCommand(sql, cnn);
             SqlDataReader dataReader = command.ExecuteReader();
@@ -79,5 +126,7 @@ namespace PEETS.Models
         };
 
         public string SelectedOrdreItem { get; set; }
+
+
     }
 }

@@ -1,10 +1,23 @@
 ﻿@using PEETS.Models;
 @model List<OffreBean>
 @{
-    ViewBag.Title = "Acceuil";
+    ViewBag.Title = "Accueil";
     int pageActuel = ViewBag.PageActuel;
     string rech = ViewBag.ReqRech;
-    var total = OffreBean.GetTotalRows(rech);
+    var typeArticle = ViewBag.typeArticle;
+    var total = 0;
+    if (typeArticle == 1)
+    {
+        total = OffreBean.GetTotalRows(rech);
+    }
+    else if (typeArticle == 2)
+    {
+        total = OffreBean.GetTotalRowsNotes(rech);
+    }
+    else if (typeArticle == 3)
+    {
+        total = OffreBean.GetTotalRowsCalcu(rech);
+    }    
 }
 
 <style>
@@ -23,7 +36,7 @@
     </div>
 
     <div id="labelNbLivre" style="padding-left: 40px;padding-top: 15px;padding-bottom: 15px">
-        <label>Nombre de livres répertoriés: </label> <span style="font-weight: bold;padding-left: 10px">@total</span>
+        <label>Nombre d'articles répertoriés: </label> <span style="font-weight: bold;padding-left: 10px">@total</span>
     </div>
 
     @{  if (Model.Count > 4)
@@ -31,10 +44,21 @@
             <div style="padding-top: 10px;text-align: center">
                 <table>
                     <tr>
+                        <td><label style="width: 180px">Type d'article: </label> 
+                            @Html.DropDownListFor(m => m.First().TypeArticle, new SelectList(new List<Object>
+                            {
+                                 new { value = "1" , text = "Livre"  },
+                                 new { value = "2"  , text = "Notes de cours"  },
+                                 new { value = "3" , text = "Calculatrice"  },
+                            },
+                            "value",
+                            "text",
+                            "1"
+                            ))</td>
                         <td><label style="width: 180px">Trier par: </label> @Html.DropDownListFor(m => m.First().SelectedTriItem, Model.First().TriItems, new { style = "width: 100px" })</td>
                         <td><label style="width: 180px">Ordre: </label> @Html.DropDownListFor(m => m.First().SelectedOrdreItem, Model.First().OrdreItems, new { style = "width: 100px" })</td>
                         <td style="padding-left: 50px" colspan="2">
-                            <button style="width: 150px;" onclick="Trier()" class="btn btn-sm btn-success">Appliquer le tri</button>
+                            <button style="width: 150px;" onclick="Trier()" class="btn btn-sm btn-success">Appliquer le filtre</button>
                         </td>
                     </tr>
                 </table>
@@ -42,6 +66,9 @@
         }
     }
 
+    @{  if (typeArticle == 1)
+      
+{
     <div id="affichageLivre">
         @{
             foreach (var offre in Model)
@@ -66,7 +93,7 @@
                 </div>
             }
         }
-
+        
         <input type="hidden" id="pageActuel" value="@pageActuel" />
         <input type="hidden" id="nomPage" value="Acceuil" />
 
@@ -107,7 +134,148 @@
         </div>
 
     </div>
+}
+}
 
+    @{  if (typeArticle == 2)
+
+        {
+        <div id="affichageNotesCours">
+            @{
+          foreach (var offre in Model)
+          {
+            <div class="col-md-3 ajaxLink" style="text-align: center;padding-top: 20px;" title="@offre.NomLivre">
+                <p>
+                    <img src="@offre.ImageLivre" style="width: 120px!important; height: 140px!important" alt="x" class="img-thumbnail" />
+                </p>
+                <h5 style=" color: red;height: 42px;font-weight: bold">@offre.NomLivre</h5>
+                <h6><span style="font-weight: bold">Code Barre: </span>@offre.CodeBarre</h6>
+                <div><span style="font-weight: bold">État: </span>@offre.EtatLivre</div>
+                <div><span style="font-weight: bold">Prix: </span>@offre.Prix</div>
+                @using (Ajax.BeginForm("GetDetailsJsonNotes", new { noOffre = @offre.NoOffre },
+                        new AjaxOptions
+                        {
+                            OnSuccess = "DetailsOnSuccessNotes",
+                            OnFailure = "DetailsOnFailure"
+                        }))
+                {
+                    <p style="padding-top: 5px"><input class="btn btn-danger" value="Détails" type="submit" id="btnOffre_@offre.NoOffre" data-toggle="modal" /></p>
+                }
+            </div>
+          }
+            }
+
+            <input type="hidden" id="pageActuel" value="@pageActuel" />
+            <input type="hidden" id="nomPage" value="Acceuil" />
+
+            <div id="pagination" style="text-align: center" class="col-md-12">
+
+                @{
+                    var count = total / 8.0;
+                    var pageCount = (int)Math.Ceiling((decimal)count);
+                }
+
+
+                <ul class="pagination">
+
+                    <li>
+                        <a style="cursor: pointer" onclick="GererPagination('<-1')">&larr; Précédent</a>
+                    </li>
+
+                    @{
+                        if (Model.Count > 0)
+                        {
+                            for (int p = 1; p < (pageCount + 1); p++)
+                            {
+                                string page = p.ToString();
+
+                                <li @if (@p == pageActuel) { <text> class="active" </text>  }>
+                                    <a style="cursor: pointer" onclick="GererPagination('@page')">@page</a>
+                                </li>
+
+                            }
+                        }
+
+                    }
+                    <li>
+                        <a style="cursor: pointer" onclick="GererPagination('+>1')">Suivant &rarr;</a>
+                    </li>
+                </ul>
+
+            </div>
+
+        </div>
+    }
+    }
+
+    @{  if (typeArticle == 3)
+      {
+        <div id="affichageCalculatrice">
+            @{
+          foreach (var offre in Model)
+          {
+            <div class="col-md-3 ajaxLink" style="text-align: center;padding-top: 20px;" title="@offre.ModeleCalculatrice">
+                <p>
+                    <img src="@offre.ImageLivre" style="width: 120px!important; height: 140px!important" alt="x" class="img-thumbnail" />
+                </p>
+                <h5 style=" color: red;height: 42px;font-weight: bold">@offre.ModeleCalculatrice</h5>
+                <div><span style="font-weight: bold">État: </span>@offre.EtatLivre</div>
+                <div><span style="font-weight: bold">Prix: </span>@offre.Prix</div>
+                @using (Ajax.BeginForm("GetDetailsJsonCalculatrice", new { noOffre = @offre.NoOffre },
+                        new AjaxOptions
+                        {
+                            OnSuccess = "DetailsOnSuccessCalculatrice",
+                            OnFailure = "DetailsOnFailure"
+                        }))
+                {
+                    <p style="padding-top: 5px"><input class="btn btn-danger" value="Détails" type="submit" id="btnOffre_@offre.NoOffre" data-toggle="modal" /></p>
+                }
+            </div>
+          }
+            }
+
+            <input type="hidden" id="pageActuel" value="@pageActuel" />
+            <input type="hidden" id="nomPage" value="Acceuil" />
+
+            <div id="pagination" style="text-align: center" class="col-md-12">
+
+                @{
+          var count = total / 8.0;
+          var pageCount = (int)Math.Ceiling((decimal)count);
+                }
+
+
+                <ul class="pagination">
+
+                    <li>
+                        <a style="cursor: pointer" onclick="GererPagination('<-1')">&larr; Précédent</a>
+                    </li>
+
+                    @{
+          if (Model.Count > 0)
+          {
+              for (int p = 1; p < (pageCount + 1); p++)
+              {
+                  string page = p.ToString();
+
+                <li @if (@p == pageActuel) { <text> class="active" </text>  }>
+                    <a style="cursor: pointer" onclick="GererPagination('@page')">@page</a>
+                </li>
+
+              }
+          }
+
+                    }
+                    <li>
+                        <a style="cursor: pointer" onclick="GererPagination('+>1')">Suivant &rarr;</a>
+                    </li>
+                </ul>
+
+            </div>
+
+        </div>
+      }
+    }
 
     <div class="modal fade" id="detailsDialog" tabindex="-1">
         <div class="modal-dialog modal-dialog modal-vertical-centered">
@@ -139,6 +307,69 @@
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-danger btn-sm" data-dismiss="modal"> Fermer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="detailsDialogNotes" tabindex="-1">
+        <div class="modal-dialog modal-dialog modal-vertical-centered">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #9a161a">
+                    <a href="#" class="close" data-dismiss="modal">&times;</a>
+                    <h4 style="color: white!important">Détails sur les notes de cours <span id="headerDetails"></span></h4>
+                </div>
+                <div class="modal-body" style="height: 400px">
+
+                    <div> <div> <label style="font-weight: bold;width: 190px">Nom: </label><span id="nomNotes"></span></div></div>
+                    <div> <div> <label style="font-weight: bold;width: 190px">Sous-titre: </label><span id="sousTitreNotes"></span></div></div>
+                    <div> <div> <label style="font-weight: bold;width: 190px">Mois et année de rédaction: </label><span id="dateRedaction"></span></div></div>
+                    <div> <div> <label style="font-weight: bold;width: 190px">Mois et année de révision: </label><span id="dateRevision"></span></div></div>
+                    <div> <div> <label style="font-weight: bold;width: 190px">Obligatoire pour cours: </label><span id="coursObligNotes"></span></div></div>
+                    <div> <div> <label style="font-weight: bold;width: 190px">Recommandé pour cours: </label><span id="coursRecomNotes"></span></div></div>
+                    <div> <div> <label style="font-weight: bold;width: 190px">État: </label><span id="etatNotes"></span></div></div>
+                    <div> <div> <label style="font-weight: bold;width: 190px">Prix demandé: </label><span id="prixNotes"></span><label style="font-weight: bold;">$ </label></div></div>
+                    <div> <div> <label style="font-weight: bold;width: 190px">Remarques: </label><span id="remNotes"></span></div></div>
+
+                    <fieldset style="margin-top: 40px">
+                        <legend>Information sur l'offrant</legend>
+                        <div> <div> <label style="font-weight: bold;width: 170px">Courriel: </label><a id="courrProprioNotes"></a></div></div>
+                        <div> <div> <label style="font-weight: bold;width: 170px">Téléphone: </label><span id="telProprioNotes"></span></div></div>
+                    </fieldset>
+
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-danger btn-sm" data-dismiss="modal"> Annuler</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="detailsDialogCalculatrice" tabindex="-1">
+        <div class="modal-dialog modal-dialog modal-vertical-centered">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #9a161a">
+                    <a href="#" class="close" data-dismiss="modal">&times;</a>
+                    <h4 style="color: white!important">Détails sur la calculatrice <span id="headerDetailsCalcu"></span></h4>
+                </div>
+                <div class="modal-body" style="height: 400px">
+
+                    <div> <div> <label style="font-weight: bold;width: 190px">Modèle: </label><span id="modeleCalculatrice"></span></div></div>
+                    <div> <div> <label style="font-weight: bold;width: 190px">Obligatoire pour cours: </label><span id="coursObligCalcu"></span></div></div>
+                    <div> <div> <label style="font-weight: bold;width: 190px">Recommandé pour cours: </label><span id="coursRecomCalcu"></span></div></div>
+                    <div> <div> <label style="font-weight: bold;width: 190px">État: </label><span id="etatCalcu"></span></div></div>
+                    <div> <div> <label style="font-weight: bold;width: 190px">Prix demandé: </label><span id="prixCalcu"></span><label style="font-weight: bold;">$ </label></div></div>
+                    <div> <div> <label style="font-weight: bold;width: 190px">Remarques: </label><span id="remCalcu"></span></div></div>
+
+                    <fieldset style="margin-top: 40px">
+                        <legend>Information sur l'offrant</legend>
+                        <div> <div> <label style="font-weight: bold;width: 170px">Courriel: </label><a id="courrProprioCalcu"></a></div></div>
+                        <div> <div> <label style="font-weight: bold;width: 170px">Téléphone: </label><span id="telProprioCalcu"></span></div></div>
+                    </fieldset>
+
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-danger btn-sm" data-dismiss="modal"> Annuler</button>
                 </div>
             </div>
         </div>
