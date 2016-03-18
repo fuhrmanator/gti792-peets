@@ -3,17 +3,25 @@ title Plateforme d'échange d'articles scolaires
 left to right direction
 skinparam style strictuml
 skinparam packageStyle rect
-actor Administrator
+actor Administrateur
 actor Étudiant
 actor Modérateur
 rectangle "<<actor>>\nService\nd'authentification\n(Google)" as SA
 rectangle "Plateforme d'échange\nd'articles scolaires (PÉÉTS)" {
   Étudiant -- (Gérer compte)
   (Gérer compte) -- SA
-  Étudiant -- (Gérer offres)
+  Étudiant -- (Ajouter une offre pour un livre)
+  Étudiant -- (Ajouter une offre pour des notes de cours)
+  Étudiant -- (Ajouter une offre pour une calculatrice)
+  Étudiant -- (Modifier une offre)
+  Étudiant -- (Fermer une offre)
   Étudiant -- (Rechercher article)
   Étudiant -- (Consulter offre)
-  Administrator -- (Gérer offres)
+  Étudiant -- (Envoyer un message à propos d'une offre)
+  Administrateur -- (Modifier une offre)
+  Administrateur -- (Fermer une offre)
+  Administrateur -- (Imprimer une étiquette)
+  Administrateur -- (Envoyer un message à propos d'une offre)
 }
 note as N1
  En utilisant les comptes Google, 
