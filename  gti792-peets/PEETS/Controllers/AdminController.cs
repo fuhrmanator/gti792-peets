@@ -37,6 +37,7 @@ namespace PEETS.Controllers
             SqlConnection cnn = null;
             var connetionString = Properties.Settings.Default.dbConnectionString;
             cnn = new SqlConnection(connetionString);
+            String path = @"C:\Users\Patrick\Desktop\";
 
             if(pForBook)
             {
@@ -68,7 +69,7 @@ namespace PEETS.Controllers
                     da.Fill(dsEtiquetteLivres);
                     DataTable dtEtiquetteLivres = dsEtiquetteLivres.Tables[0];
 
-                    using (StreamWriter writer = System.IO.File.CreateText(@"C:\Users\Patrick\Desktop\EtiquettesLivres.csv")) 
+                    using (StreamWriter writer = System.IO.File.CreateText(path+"EtiquettesLivres.csv")) 
                     {
                         foreach(DataRow row in dtEtiquetteLivres.Rows)
                         {
@@ -111,7 +112,7 @@ namespace PEETS.Controllers
                     da.Fill(dsEtiquetteNotes);
                     DataTable dtEtiquetteNotes = dsEtiquetteNotes.Tables[0];
 
-                    using (StreamWriter writer = System.IO.File.CreateText(@"C:\Users\Patrick\Desktop\EtiquettesNotes.csv"))
+                    using (StreamWriter writer = System.IO.File.CreateText(path+"EtiquettesNotes.csv"))
                     {
                         foreach (DataRow row in dtEtiquetteNotes.Rows)
                         {
@@ -154,7 +155,7 @@ namespace PEETS.Controllers
                     da.Fill(dsEtiquetteCalcu);
                     DataTable dtEtiquetteCalcu = dsEtiquetteCalcu.Tables[0];
 
-                    using (StreamWriter writer = System.IO.File.CreateText(@"C:\Users\Patrick\Desktop\EtiquettesCalculatrices.csv"))
+                    using (StreamWriter writer = System.IO.File.CreateText(path+"EtiquettesCalculatrices.csv"))
                     {
                         foreach (DataRow row in dtEtiquetteCalcu.Rows)
                         {
