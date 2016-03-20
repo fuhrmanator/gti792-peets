@@ -1,0 +1,10 @@
+﻿@using Microsoft.AspNet.Identity
+@using Microsoft.Owin.Security
+
+@if (Request.IsAuthenticated && bool.Parse(Session["IsAdmin"].ToString()))
+{
+    @Html.ActionLink("Imprimer des étiquettes", "Index", "Admin")
+
+}
+
+

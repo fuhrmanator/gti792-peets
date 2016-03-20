@@ -23,13 +23,14 @@
         }
     });
 
-    $("#Accueil, #Compte, #Offre, #About, #Contact").click(function () {
+    $("#Accueil, #Compte, #Offre, #About, #Contact, #Etiquette").click(function () {
 
         $("#Accueil").removeClass("active");
         $("#Compte").removeClass("active");
         $("#Offre").removeClass("active");
         $("#About").removeClass("active");
         $("#Contact").removeClass("active");
+        $("#Etiquette").removeClass("active");
 
         $("#" + this.id + "").addClass("active");
 
@@ -356,4 +357,24 @@ function AfficherModalFermeture(id, nom) {
 
 
     
+}
+
+function ImprimerEtiquette()
+{
+    var forBook = document.getElementById("chkLivres").checked;
+    var forNotes = document.getElementById("chkNotesDeCours").checked;
+    var forCalcu = document.getElementById("chkCalculatrice").checked;
+    var dateDebut = $("#debutDatePicker").val();
+    var dateFin = $("#finDatePicker").val();
+    
+
+    var data = { pForBook: forBook, pForNotes: forNotes, pForCalcu: forCalcu, pDateDebut: dateDebut, pDateFin: dateFin };
+    $.ajax({
+        type: "POST",
+        url: "/Admin/ImprimerEtiquette",
+        data: data,
+        success: function (data) {
+            document.getElementById("alert").style.display = "block";
+        }
+    });
 }

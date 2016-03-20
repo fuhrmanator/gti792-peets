@@ -42,15 +42,26 @@
                         <li id="Compte" @if (menuItemActive == "Compte") { <text> class="nav active" </text> } else { <text> class="nav" </text> }>@Html.Partial("_LoginPartial")</li>
 
                         <li id="Offre" @if (menuItemActive == "Offre") { <text> class="nav active" </text>  } else { <text> class="nav" </text>  }>@Html.Partial("_LinkOffre")</li>
-
+                        <li id="Etiquette" @if (menuItemActive == "Etiquette") { <text> class="nav active" </text>   } else { <text> class="nav" </text>   }>@Html.Partial("_Etiquette")</li>
                         <li class="nav" @if (menuItemActive == "Connecter") { <text> class="nav active" </text>   } else { <text> class="nav" </text>   }>@Html.Partial("_LoginPartial2")</li>
                         <li id="About" @if (menuItemActive == "About") { <text> class="nav active" </text>  } else { <text> class="nav" </text>  }>@Html.ActionLink("À propos de", "About", "Home")</li>
                        
                         <li id="Contact" @if (menuItemActive == "Contact") { <text> class="nav active" </text>   } else { <text> class="nav" </text>   }>@Html.ActionLink("Contact", "Contact", "Home")</li>
 
                     </ul>
+                  
                 </div>
+                @if (Session["UserName"] != null && Session["UserName"] != "")
+                {
+                <div class="navbar-collapse collapse">
+             
+                    <ul class="nav navbar-nav navbar-right" style="padding-right: 20px">
 
+                        <li id="Nom" class="nav">Bienvenue @Session["UserName"]</li>
+
+                    </ul>
+                </div>
+                }
             </div>
             
         </header>

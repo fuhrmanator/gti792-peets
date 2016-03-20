@@ -1,0 +1,66 @@
+﻿<link href="~/Content/bootstrap-datepicker.css" rel="stylesheet" />
+
+
+<h3>Imprimer les étiquettes</h3>
+
+
+        <div id="alert" class="alert alert-success collapse" style="display:none">
+            <a href="#" data-dismiss="alert" class="close">&times;</a>
+            Les fichiers .csv ont été créés.
+        </div>
+
+  
+ 
+
+<label>Types d'articles :</label>
+<form class="form-horizontal">
+    <div class="checkbox">
+        <label><input type="checkbox" value="1" id="chkLivres" />Livres</label>
+        <label><input type="checkbox" value="2" id="chkNotesDeCours" />Notes de cours</label>
+        <label><input type="checkbox" value="3" id="chkCalculatrice" />Calculatrice</label>
+    </div>
+    <br />
+    <div class="form-group">
+        <label>Date de début :</label>
+        <div>
+            <div >
+                <input type="text" class="datepicker" id="debutDatePicker">
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Date de fin :</label>
+        <div>
+            <div>
+                <input type="text" class="datepicker" id="finDatePicker">
+            </div>
+        </div>
+    </div>
+
+    <a onclick="javascript:ImprimerEtiquette()" class="btn btn-success btn-sm">Imprimer</a>
+</form>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/bootstrap")
+    <script src="~/Scripts/bootstrap-filestyle-0.1.0.min.js"> </script>
+    <script>
+        $(document).ready(function () {
+            $('#debutDatePicker')
+                .datepicker({
+                    format: 'mm/dd/yyyy',
+                    autoclose:true
+                })
+
+            $('#finDatePicker')
+              .datepicker({
+                  format: 'mm/dd/yyyy',
+                  autoclose: true
+              })
+
+
+        });
+    </script>
+}
+
+

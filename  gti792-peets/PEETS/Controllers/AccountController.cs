@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin.Security;
+using System.IO;
 using PEETS.Enums;
 using PEETS.Models;
 
@@ -34,6 +35,7 @@ namespace PEETS.Controllers
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
+            ViewBag.UserName = "";
             ViewBag.ReturnUrl = returnUrl;
             ViewBag.menuItemActive = "Connecter";
             return View();
@@ -50,8 +52,10 @@ namespace PEETS.Controllers
             {
                 var user = await UserManager.FindAsync(model.UserName, model.Password);
                 if (user != null)
-                {
+                {                  
                     await SignInAsync(user, model.RememberMe);
+                    Session["UserName"] = user.UserName;
+                    Session["IsAdmin"] = IsAdmin(user.Email);
                     return RedirectToLocal(returnUrl);
                 }
                 else
@@ -116,7 +120,8 @@ namespace PEETS.Controllers
             {
                 message = ManageMessageId.Error;
             }
-
+            Session["IsAdmin"] = false;
+            Session["UserName"] = "";
             return RedirectToAction("LogOff", "Account");
         }
 
@@ -251,6 +256,8 @@ namespace PEETS.Controllers
             if (user != null)
             {
                 await SignInAsync(user, isPersistent: false);
+                Session["UserName"] = user.UserName;
+                Session["IsAdmin"] = IsAdmin(user.Email);
                 return RedirectToLocal(returnUrl);
             }
             else
@@ -310,21 +317,49 @@ namespace PEETS.Controllers
                     return View("ExternalLoginFailure");
                 }
                 var user = new ApplicationUser() { UserName = model.UserName, Email = model.Email, PhoneNumber = model.PhoneNumber };
-                var result = await UserManager.CreateAsync(user);
-                if (result.Succeeded)
+                if(!user.Email.EndsWith("@etsmtl.net"))
                 {
-                    result = await UserManager.AddLoginAsync(user.Id, info.Login);
+                    ModelState.AddModelError("", "Invalid username. It must be an email adress from etsmtl.net domain");
+                    
+                }
+                else
+                {
+                    var result = await UserManager.CreateAsync(user);
                     if (result.Succeeded)
                     {
-                        await SignInAsync(user, isPersistent: false);
-                        return RedirectToLocal(returnUrl);
+                        result = await UserManager.AddLoginAsync(user.Id, info.Login);
+                        if (result.Succeeded)
+                        {
+                            await SignInAsync(user, isPersistent: false);
+                            Session["UserName"] = user.UserName;
+                            Session["IsAdmin"] = IsAdmin(user.Email);
+                            return RedirectToLocal(returnUrl);
+                        }
                     }
+                    AddErrors(result);
                 }
-                AddErrors(result);
             }
 
             ViewBag.ReturnUrl = returnUrl;
             return View(model);
+        }
+
+        public bool IsAdmin(String pEmail)
+        {
+            bool isAdmin = false;
+            string line;
+
+            // Read the file and display it line by line.
+            StreamReader file = new StreamReader(Server.MapPath("~/admin.txt"));
+            while ((line = file.ReadLine()) != null)
+            {
+                if (line == pEmail)
+                    isAdmin = true;
+            }
+
+            file.Close();
+
+            return isAdmin;
         }
 
         //
@@ -332,6 +367,8 @@ namespace PEETS.Controllers
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut();
+            Session["UserName"] = null;
+            Session["IsAdmin"] = false;
             return RedirectToAction("Index", "Home");
         }
 
