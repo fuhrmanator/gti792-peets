@@ -51,6 +51,9 @@
     <Reference Include="ComputerBeacon.Json">
       <HintPath>..\packages\ComputerBeacon.Json.4.2.765\lib\portable-net4+sl4+wp7+win8\ComputerBeacon.Json.dll</HintPath>
     </Reference>
+    <Reference Include="EASendMail">
+      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\EASendMail\EASendMail.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.dll</HintPath>
@@ -475,6 +478,9 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -95,13 +95,21 @@ function DetailsOnSuccess(data) {
         $("#anneeEdition").text(detail.AnneeEdition);
         $("#remLivre").text(detail.Remarques);
         $("#etatLivre").text(detail.EtatLivre);
-        $("#courrProprio").attr("href", "mailto:" + detail.Email);
+        $("#courrProprio").attr("href", "mailto:" + detail.Email + "?Subject=Offre%20"+detail.NomLivre+"&body=Je%20veux%20acheter%20le%20livre%20" + detail.NomLivre + ".");
         $("#courrProprio").text(detail.Email);
         $("#telProprio").text(detail.Phone);
 
         $("#detailsDialog").modal();
     }
    
+}
+
+function ShowEmailDialog() {
+
+
+    $("#EmailDialog").modal();
+    
+
 }
 
 function DetailsOnSuccessNotes(data) {
@@ -121,7 +129,8 @@ function DetailsOnSuccessNotes(data) {
         $("#prixNotes").text(detail.Prix);
         $("#remNotes").text(detail.Remarques);
         $("#etatNotes").text(detail.EtatLivre);
-        $("#courrProprioNotes").attr("href", "mailto:" + detail.Email);
+        $("#courrProprioNotes").attr("href", "mailto:" + detail.Email + "?Subject=Offre%20" + detail.NomNotesCours + "%20" + detail.SousTitre +
+            "&body=Je%20veux%20acheter%20les%20notes%20de%20cours%20" + detail.NomNotesCours + "%20" + detail.SousTitre + ".");
         $("#courrProprioNotes").text(detail.Email);
         $("#telProprioNotes").text(detail.Phone);
 
@@ -144,7 +153,8 @@ function DetailsOnSuccessCalculatrice(data) {
         $("#prixCalcu").text(detail.Prix);
         $("#remCalcu").text(detail.Remarques);
         $("#etatCalcu").text(detail.EtatLivre);
-        $("#courrProprioCalcu").attr("href", "mailto:" + detail.Email);
+        $("#courrProprioCalcu").attr("href", "mailto:" + detail.Email + "?Subject=Offre%20" + detail.ModeleCalculatrice +
+            "&body=Je%20veux%20acheter%20la%20calculatrice%20" + detail.ModeleCalculatrice + ".");
         $("#courrProprioCalcu").text(detail.Email);
         $("#telProprioCalcu").text(detail.Phone);
 
@@ -370,7 +380,7 @@ function ImprimerEtiquette()
 
     var data = { pForBook: forBook, pForNotes: forNotes, pForCalcu: forCalcu, pDateDebut: dateDebut, pDateFin: dateFin };
     $.ajax({
-        type: "POST",
+        type: "GET",
         url: "/Admin/ImprimerEtiquette",
         data: data,
         success: function (data) {
@@ -378,3 +388,5 @@ function ImprimerEtiquette()
         }
     });
 }
+
+

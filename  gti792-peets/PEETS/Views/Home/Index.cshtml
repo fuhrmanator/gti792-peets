@@ -17,7 +17,8 @@
     else if (typeArticle == 3)
     {
         total = OffreBean.GetTotalRowsCalcu(rech);
-    }    
+    }
+    
 }
 
 <style>
@@ -39,8 +40,8 @@
         <label>Nombre d'articles répertoriés: </label> <span style="font-weight: bold;padding-left: 10px">@total</span>
     </div>
 
-    @{  if (Model.Count > 4)
-        {
+
+    
             <div style="padding-top: 10px;text-align: center">
                 <table>
                     <tr>
@@ -63,8 +64,8 @@
                     </tr>
                 </table>
             </div>
-        }
-    }
+        
+    
 
     @{  if (typeArticle == 1)
       
@@ -305,7 +306,7 @@
                     </fieldset>
 
                 </div>
-                <div class="modal-footer">
+                <div class="modal-footer">   
                     <button class="btn btn-danger btn-sm" data-dismiss="modal"> Fermer</button>
                 </div>
             </div>
