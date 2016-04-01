@@ -1,0 +1,20 @@
+@startuml
+skinparam style strictuml
+'top to bottom direction
+left to right direction
+
+node ":VM_LOGTI\n{  OS=Window Server 2012 }" <<server>> #lightgreen {
+  node ":n{ Framework=ASP.NET 4.5 }" #white {
+    component PEETS.server as ChS
+  }
+  node ":Sql Server 2012" <<base de données>> as DB
+[ChS] -right- [DB]
+}
+node ":GenericPC" <<client workstation>> #lightblue {
+  node ":FureteurModerne" #white {
+  component PEETS.client   as ChC
+}
+}
+
+[ChC] -down- [ChS] : HTTP
+@enduml
