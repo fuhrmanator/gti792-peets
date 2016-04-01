@@ -2,13 +2,13 @@
 skinparam style strictuml
 hide methods
 hide empty members
-title ModÃ¨le du domaine \n(Plateforme dâ€™Ã©change dâ€™articles scolaires)
+title Modèle du domaine \n(Plateforme d’échange d’articles scolaires)
 class Utilisateur {
   nom : String
   courriel : Courriel
 }
 
-class  "Ã‰tudiant"  as E
+class  "Étudiant"  as E
 class E {
 }
 
@@ -31,7 +31,8 @@ class Livre {
 class NotesDeCours {
   sousTitre : String
   codeBarre : String
-  dateEdition : String
+  dateRedaction : String
+  dateRevision : String
 }
 class Calculatrice {
   modele : String
@@ -39,7 +40,7 @@ class Calculatrice {
 
 
 class Offre{
-  dateDÃ©but
+  dateDébut
   prix
   condition : Condition
 }
@@ -52,8 +53,8 @@ NotesDeCours .up.|> Article
 Calculatrice .up.|> Article
 Utilisateur "1" - "1" Compte: s'authentifie-par >
 
-E "1" -- "1..*" Offre: crÃ©e >
-'E "0..*" - "1..*" Offre: MisÃ© >
+E "1" -- "1..*" Offre: crée >
+'E "0..*" - "1..*" Offre: Misé >
 'E "0..*" - "1..*" Article: recherche >
 Offre "*" - "1" Article : propose >
 A "1..*" - "0..*" Offre : modifie >
