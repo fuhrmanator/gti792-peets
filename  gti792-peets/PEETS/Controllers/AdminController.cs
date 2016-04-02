@@ -46,7 +46,7 @@ namespace PEETS.Controllers
                 cnn.Open();
                 string sql = "SELECT COUNT(Id) " +  
                              "FROM Offre "+ 
-                             "WHERE IdTypeArticle = 1 AND DateCreation BETWEEN '" + pDateDebut.ToString() + "' AND '" + pDateFin +"'";
+                             "WHERE IdTypeArticle = 1 AND IndActif = 1 AND DateCreation BETWEEN '" + pDateDebut.ToString() + "' AND '" + pDateFin +"'";
                 var command = new SqlCommand(sql, cnn);
                 SqlDataReader dataReader = command.ExecuteReader();
                 while (dataReader.Read())
@@ -61,7 +61,7 @@ namespace PEETS.Controllers
                     string sqlEtiquetteLivres = "SELECT o.Id,l.Nom, l.AnneeEdition,o.CoursOblig, o.Prix " +
                                                 "FROM Offre o " +
                                                 "INNER JOIN Livre l ON l.Id = o.IdArticle AND o.IdTypeArticle = 1 " +
-                                                "WHERE  DateCreation BETWEEN '" + pDateDebut.ToString() + "' AND '" + pDateFin + "'";
+                                                "WHERE IndActif = 1 AND DateCreation BETWEEN '" + pDateDebut.ToString() + "' AND '" + pDateFin + "'";
                     SqlDataAdapter da = new SqlDataAdapter();
                     SqlCommand command2 = new SqlCommand(sqlEtiquetteLivres, cnn);
                     da.SelectCommand = command2;
@@ -89,7 +89,7 @@ namespace PEETS.Controllers
                 cnn.Open();
                 string sql = "SELECT COUNT(Id) " +
                              "FROM Offre " +
-                             "WHERE IdTypeArticle = 2 AND DateCreation BETWEEN '" + pDateDebut.ToString() + "' AND '" + pDateFin + "'";
+                             "WHERE IdTypeArticle = 2 AND IndActif = 1 AND DateCreation BETWEEN '" + pDateDebut.ToString() + "' AND '" + pDateFin + "'";
                 var command = new SqlCommand(sql, cnn);
                 SqlDataReader dataReader = command.ExecuteReader();
                 while (dataReader.Read())
@@ -104,7 +104,7 @@ namespace PEETS.Controllers
                     string sqlEtiquetteNotes = "SELECT o.Id,n.Nom, n.SousTitre,o.CoursOblig, o.Prix " +
                                                 "FROM Offre o " +
                                                 "INNER JOIN NotesDeCours n ON n.IdNotesDeCours = o.IdArticle AND o.IdTypeArticle = 2 " +
-                                                "WHERE  DateCreation BETWEEN '" + pDateDebut.ToString() + "' AND '" + pDateFin + "'";
+                                                "WHERE IndActif = 1 AND  DateCreation BETWEEN '" + pDateDebut.ToString() + "' AND '" + pDateFin + "'";
                     SqlDataAdapter da = new SqlDataAdapter();
                     SqlCommand command2 = new SqlCommand(sqlEtiquetteNotes, cnn);
                     da.SelectCommand = command2;
@@ -132,7 +132,7 @@ namespace PEETS.Controllers
                 cnn.Open();
                 string sql = "SELECT COUNT(Id) " +
                              "FROM Offre " +
-                             "WHERE IdTypeArticle = 3 AND DateCreation BETWEEN '" + pDateDebut.ToString() + "' AND '" + pDateFin + "'";
+                             "WHERE IdTypeArticle = 3 AND IndActif = 1 AND DateCreation BETWEEN '" + pDateDebut.ToString() + "' AND '" + pDateFin + "'";
                 var command = new SqlCommand(sql, cnn);
                 SqlDataReader dataReader = command.ExecuteReader();
                 while (dataReader.Read())
@@ -147,7 +147,7 @@ namespace PEETS.Controllers
                     string sqlEtiquetteCalcu = "SELECT o.Id,c.Modele, o.CoursOblig, o.Prix " +
                                                 "FROM Offre o " +
                                                 "INNER JOIN Calculatrice c ON c.IdCalculatrice = o.IdArticle AND o.IdTypeArticle = 3 " +
-                                                "WHERE  DateCreation BETWEEN '" + pDateDebut.ToString() + "' AND '" + pDateFin + "'";
+                                                "WHERE IndActif = 1 AND DateCreation BETWEEN '" + pDateDebut.ToString() + "' AND '" + pDateFin + "'";
                     SqlDataAdapter da = new SqlDataAdapter();
                     SqlCommand command2 = new SqlCommand(sqlEtiquetteCalcu, cnn);
                     da.SelectCommand = command2;
