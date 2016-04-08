@@ -369,23 +369,18 @@ function AfficherModalFermeture(id, nom) {
     
 }
 
-function ImprimerEtiquette()
+function SetDate()
 {
-    var forBook = document.getElementById("chkLivres").checked;
-    var forNotes = document.getElementById("chkNotesDeCours").checked;
-    var forCalcu = document.getElementById("chkCalculatrice").checked;
+
     var dateDebut = $("#debutDatePicker").val();
     var dateFin = $("#finDatePicker").val();
     
 
-    var data = { pForBook: forBook, pForNotes: forNotes, pForCalcu: forCalcu, pDateDebut: dateDebut, pDateFin: dateFin };
+    var data = {  pDateDebut: dateDebut, pDateFin: dateFin };
     $.ajax({
-        type: "GET",
-        url: "/Admin/ImprimerEtiquette",
-        data: data,
-        success: function (data) {
-            document.getElementById("alert").style.display = "block";
-        }
+        type: "POST",
+        url: "/Admin/SetDateForPrint",
+        data: data
     });
 }
 
