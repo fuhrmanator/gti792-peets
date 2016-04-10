@@ -3,7 +3,6 @@
 
 <h3>Imprimer les étiquettes</h3>
 
-<label>Types d'articles :</label>
 <form class="form-horizontal">
     
     <div class="form-group">
@@ -22,11 +21,17 @@
             </div>
         </div>
     </div>
-
-    <a href="Admin/ImprimerEtiquetteLivre" class="btn btn-success btn-sm">Imprimer Étiquettes Livres</a>
-    <a href="Admin/ImprimerEtiquetteNotesDeCours" class="btn btn-success btn-sm">Imprimer Étiquettes Notes de cours</a>
-    <a href="Admin/ImprimerEtiquetteCalculatrices" class="btn btn-success btn-sm">Imprimer Étiquettes Calculatrices</a>
-</form>
+    <div class="form-group">
+        <label>Création de fichiers pour :</label>
+        <div>
+            <div>
+                <a href="Admin/ImprimerEtiquetteLivre" class="btn btn-success btn-sm">Livres</a>
+                <a href="Admin/ImprimerEtiquetteNotesDeCours" class="btn btn-success btn-sm">Notes de cours</a>
+                <a href="Admin/ImprimerEtiquetteCalculatrices" class="btn btn-success btn-sm">Calculatrices</a>
+            </div>
+        </div>
+    </div>
+    </form>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
