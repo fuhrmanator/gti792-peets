@@ -8,21 +8,36 @@ actor Étudiant
 actor Modérateur
 rectangle "<<actor>>\nService\nd'authentification\n(Google)" as SA
 rectangle "Plateforme d'échange\nd'articles scolaires (PÉÉTS)" {
-  Étudiant -- (Gérer compte)
-  (Gérer compte) -- SA
-  Étudiant -- (Ajouter une offre pour un livre)
-  Étudiant -- (Ajouter une offre pour des notes de cours)
-  Étudiant -- (Ajouter une offre pour une calculatrice)
-  Étudiant -- (Modifier une offre)
-  Étudiant -- (Fermer une offre)
+  (Gérer compte) as GC
+  (Ajouter une offre\npour un livre) as AOL
+  (Ajouter une offre\npour une calculatrice) as AOC #lightgreen
+  (Ajouter une offre\npour des notes de cours) as AON #lightgreen
+  (Modifier une offre) as MO #lightblue
+  (Envoyer un message\nà propos d'une offre) as EM #lightgreen
+  (Imprimer étiquettes) as IE #lightgreen
+  Étudiant -- GC
+  GC -- SA
+  Étudiant -- AOL
+  Étudiant -- AON
+  Étudiant -- AOC
+  Étudiant -- MO
+  Étudiant -- (Fermer une offre) 
   Étudiant -- (Rechercher article)
   Étudiant -- (Consulter offre)
-  Étudiant -- (Envoyer un message à propos d'une offre)
+  Étudiant -- EM
   Administrateur -- (Modifier une offre)
   Administrateur -- (Fermer une offre)
-  Administrateur -- (Imprimer une étiquette)
-  Administrateur -- (Envoyer un message à propos d'une offre)
+  Administrateur -- IE
+  Administrateur -- EM
 }
+'légende, expliquer les couleurs
+(//Nouvelle//\n//fonctionnalité//) as nf #lightgreen
+(//Fonctionnalité//\n//modifiée//) as fm #lightblue
+(//Fonctionnalité//\n//existante//) as fe
+'forcer une mise en page avec les lignes cachées
+nf -[#transparent]right- fm
+fm -[#transparent]right- fe
+fe -[#transparent]right- SA
 note as N1
  En utilisant les comptes Google, 
  la gestion de comptes est plus
