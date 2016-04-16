@@ -8,13 +8,14 @@ actor Étudiant
 actor Modérateur
 rectangle "<<actor>>\nService\nd'authentification\n(Google)" as SA
 rectangle "Plateforme d'échange\nd'articles scolaires (PÉÉTS)" {
-  (Gérer compte) as GC
-  (Ajouter une offre\npour un livre) as AOL
+  (Gérer un compte) as GC
+  (Ajouter une offre\npour un livre) as AOL #lightblue
   (Ajouter une offre\npour une calculatrice) as AOC #lightgreen
   (Ajouter une offre\npour des notes de cours) as AON #lightgreen
   (Modifier une offre) as MO #lightblue
+  (Consulter une offre) as CO #lightblue
   (Envoyer un message\nà propos d'une offre) as EM #lightgreen
-  (Imprimer étiquettes) as IE #lightgreen
+  (Imprimer une étiquette) as IE #lightgreen
   Étudiant -- GC
   GC -- SA
   Étudiant -- AOL
@@ -22,10 +23,10 @@ rectangle "Plateforme d'échange\nd'articles scolaires (PÉÉTS)" {
   Étudiant -- AOC
   Étudiant -- MO
   Étudiant -- (Fermer une offre) 
-  Étudiant -- (Rechercher article)
-  Étudiant -- (Consulter offre)
+  Étudiant -- (Rechercher un article)
+  Étudiant -- CO
   Étudiant -- EM
-  Administrateur -- (Modifier une offre)
+  Administrateur -- MO
   Administrateur -- (Fermer une offre)
   Administrateur -- IE
   Administrateur -- EM
